@@ -1,0 +1,2 @@
+<app-room *ngFor="let room of rooms; let idx = index" [room]="room" [index]="idx" (roomAction)="onRoomAction($event)">
+</app-room>

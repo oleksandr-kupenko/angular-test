@@ -1,0 +1,27 @@
+<div class="furniture-container">
+  <div class="furniture-nav">
+    <div class="furniture-nav_item">
+      <mat-icon aria-hidden="false" aria-label="arrow_back">arrow_back</mat-icon>
+    </div>
+    <div class="furniture-nav_item" *ngFor="let navItem of navItems; let idx = index"
+      [class.furniture-nav_item__active]="navItem.isActive" (click)="changeNavItem(idx)">
+      <mat-icon aria-hidden="false" aria-label="arrow_back">{{navItem.icon}}</mat-icon>
+      <div class="furniture-nav_name">{{navItem.title}}</div>
+    </div>
+  </div>
+  <div class="furniture-search"></div>
+  <div class="furniture-content">
+    <div *ngFor="let movie of moviesList.results.slice(0, 12); let idx = index" class="furniture-item">
+      <div class="title-item_img">
+        <img src="https://image.tmdb.org/t/p/original/{{ movie.poster_path }}"
+          onerror="this.src='assets/img/feather_image.png';" alt="hren">
+      </div>
+      <div class="furniture-item_name">
+        {{ movie.popularity }}
+      </div>
+      <div class="furniture-item_desc">
+        MOVE
+      </div>
+    </div>
+  </div>
+</div>

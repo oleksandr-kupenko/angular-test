@@ -1,0 +1,8 @@
+<div class="tile-container">
+  <div class="rooms">
+    <app-room-list [rooms]="rooms" (roomAction)="onRoomAction($event)"></app-room-list>
+  </div>
+
+  <button (click)="addRoom()" class="bt-add"><span class="plus">+</span> <span>ADD NEW ROOM</span></button>
+
+</div>
