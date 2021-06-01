@@ -1,32 +1,35 @@
-<div (dblclick)="onRoomAction('edit')" class="room-card" *ngIf="!room.isEdit; else editMode">
-  <div class="room_title">
-    <div class="room_number"> {{room.number}} </div>
-    <div class="room_name">{{ room.title | titlecase }}</div>
+<div class="room-card">
+  <div (click)="onSaveRoom()" class="room-card-head" [class.room-card-head_edit]="room.isEdit">
+    <div (dblclick)="onEditRoom()" class="room_title" *ngIf="!room.isEdit; else editMode">
+      <div (click)="$event.stopPropagation()" class="room_number"> {{room.number}} </div>
+      <div (click)="$event.stopPropagation()" class="room_name">{{ room.title | titlecase }}</div>
+    </div>
+    <div (click)="$event.stopPropagation()" class="room_action">
+      <div (click)="onClearRoom()" class="room_action-item">CLEAR ROOM</div>
+      <div (click)="onDelteRoom()" class="room_action-item">DELETE ROOM</div>
+      <div (click)="onOpenClose()" class="room_action-item"><span class="bracket"
+          [class.bracket_active]="room.isOpen">></span>
+      </div>
+    </div>
   </div>
-  <div class="room_action">
-    <div class="room_action-item">CLEAR ROOM</div>
-    <div (click)="onRoomAction('delete')" class="room_action-item">DELETE ROOM</div>
-    <div class="room_action-item"><span class="bracket">></span></div>
+  <div *ngIf="room.isOpen" class="room-card-content">
+    <app-furniture-item *ngFor="let iterCard of room.furnitureList; let idx = index" [furnitureItem]="iterCard"
+      [index]="idx">
+    </app-furniture-item>
   </div>
 </div>
 
+
 <ng-template #editMode>
-  <div class="room-card room-card_edit">
-    <div class="room_title room_title__edit">
-      <div class="room_number">
-        <input [(ngModel)]='number' [value]="room.number" type="number" id="number" autocomplete="off"
-          class="form-control" placeholder="Number">
-      </div>
-      <div class="room_name">
-        <input [(ngModel)]='title' [value]="room.title" type="text" id="title" autocomplete="off" class="form-control"
-          placeholder="Title">
-        <div *ngIf="isRequireMessage" class="warn-message">Title is required</div>
-      </div>
+  <div class="room_title room_title__edit">
+    <div (click)="$event.stopPropagation()" class="room_number">
+      <input [(ngModel)]='number' type="number" id="number" autocomplete="off" class="form-control"
+        placeholder="Number">
     </div>
-    <div class="room_action">
-      <div (click)="onRoomAction('save')" class="room_action-item">SAVE ROOM</div>
-      <div (click)="onRoomAction('delete')" class="room_action-item">DELETE ROOM</div>
-      <div class="room_action-item"><span class="bracket">></span></div>
+    <div (click)="$event.stopPropagation()" class="room_name">
+      <input [(ngModel)]='title' (input)="inputTitleHandler($event)" type="text" id="title" autocomplete="off"
+        class="form-control" placeholder="Title">
+      <div *ngIf="isRequireMessage" class="warn-message">Title is required</div>
     </div>
   </div>
 </ng-template>

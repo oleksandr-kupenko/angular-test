@@ -1,0 +1,60 @@
+.furniture-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 146px;
+  height: 204px;
+  margin: 5px;
+  text-align: center;
+  background: #ececec;
+
+  .title-item_img {
+    color: #403f4c;
+    width: 62px;
+    margin-top: 7px;
+    position: relative;
+    img {
+      max-width: 100%;
+    }
+    mat-icon {
+      $size: 3.5rem;
+      width: $size;
+      height: $size;
+      font-size: $size;
+    }
+  }
+
+  .furniture-item_name {
+    width: 100%;
+    font-size: 12px;
+    margin-bottom: auto;
+    color: #403f4c;
+  }
+
+  .furniture-item_count {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-size: 14px;
+    .furniture-item_count-bt {
+      width: 30px;
+      height: 30px;
+      color: #ffffff;
+      background: #57565c;
+    }
+    .furniture-item_count-out {
+      width: 73px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #403f4c;
+      background: #d3d3d3;
+      font-weight: bold;
+      font-size: 14px;
+    }
+  }
+}

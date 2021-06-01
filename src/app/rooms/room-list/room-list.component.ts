@@ -1,6 +1,7 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
-import { Room, RoomEdit } from '../rooms.component';
+import { RoomEdit } from '../rooms.component';
+import { Room } from '../rooms.service';
 
 @Component({
   selector: 'app-room-list',
@@ -9,12 +10,6 @@ import { Room, RoomEdit } from '../rooms.component';
 })
 export class RoomListComponent implements OnInit {
   @Input() rooms: Room[] = [];
-
-  @Output() roomAction = new EventEmitter<RoomEdit>();
-
-  onRoomAction(roomId: { idRoom: number; action: string }) {
-    this.roomAction.emit(roomId);
-  }
 
   constructor() {}
 

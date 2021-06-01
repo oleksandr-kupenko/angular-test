@@ -13,6 +13,9 @@ import { RoomsComponent } from './rooms/rooms.component';
 import { RoomComponent } from './rooms/room/room.component';
 import { RoomListComponent } from './rooms/room-list/room-list.component';
 import { FormsModule } from '@angular/forms';
+import { FurnitureItemComponent } from './rooms/room/furniture-item/furniture-item.component';
+import { FurnitureService } from './furniture/furniture.service';
+import { RoomsService } from './rooms/rooms.service';
 
 @NgModule({
   declarations: [
@@ -22,17 +25,10 @@ import { FormsModule } from '@angular/forms';
     RoomsComponent,
     RoomComponent,
     RoomListComponent,
+    FurnitureItemComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatSliderModule,
-    MatIconModule,
-    HttpClientModule,
-    FormsModule,
-  ],
-  providers: [],
+  imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule, MatSliderModule, MatIconModule, HttpClientModule, FormsModule],
+  providers: [FurnitureService, RoomsService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

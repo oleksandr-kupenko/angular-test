@@ -1,0 +1,14 @@
+<div class="furniture-item">
+  <div class="title-item_img">
+    <img src="https://image.tmdb.org/t/p/original/{{movie.poster_path}}"
+      onerror="this.src='assets/img/feather_image.png';" alt="hren">
+  </div>
+  <div class="furniture-item_name">
+    {{movie.popularity}}
+  </div>
+  <div class="furniture-item_count">
+    <button (click)="onDecrementCount()" class="furniture-item_count-bt">-</button>
+    <div class="furniture-item_count-out">{{movie.count}}</div>
+    <button (click)="onIncrementCount()" class="furniture-item_count-bt">+</button>
+  </div>
+</div>

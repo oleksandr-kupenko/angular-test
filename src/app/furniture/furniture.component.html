@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="furniture-search"></div>
-  <div class="furniture-content">
+  <div *ngIf="moviesList" class="furniture-content">
     <div *ngFor="let movie of moviesList.results.slice(0, 12); let idx = index" class="furniture-item">
       <div class="title-item_img">
         <img src="https://image.tmdb.org/t/p/original/{{ movie.poster_path }}"
@@ -19,7 +19,7 @@
       <div class="furniture-item_name">
         {{ movie.popularity }}
       </div>
-      <div class="furniture-item_desc">
+      <div (click)="addToRoom(movie)" class="furniture-item_desc">
         MOVE
       </div>
     </div>

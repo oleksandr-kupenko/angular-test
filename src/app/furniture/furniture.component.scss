@@ -6,9 +6,9 @@ $dgrey: #57565c;
   max-width: 460px;
   display: grid;
   grid-template:
-    "nav search search"
-    "nav content content"
-    "nav content content";
+    'nav search search'
+    'nav content content'
+    'nav content content';
   grid-template-columns: 12.5% 1fr;
   height: 100%;
   margin-right: 8px;
@@ -102,5 +102,9 @@ $dgrey: #57565c;
     font-size: 14px;
     line-height: 1.4rem;
     color: $mgrey;
+    cursor: pointer;
+    &:hover {
+      color: rgb(82, 81, 81);
+    }
   }
 }
