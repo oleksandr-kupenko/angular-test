@@ -1,6 +1,8 @@
 <div class="rooms-container">
   <div class="rooms">
-    <app-room-list [rooms]="rooms"></app-room-list>
+    <app-room *ngFor="let room of rooms; let idx = index" [room]="room" [index]="idx"
+      (roomAction)="onRoomAction($event)">
+    </app-room>
   </div>
 
   <button (click)="addRoom()" class="bt-add"><span class="plus">+</span> <span>ADD NEW ROOM</span></button>

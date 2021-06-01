@@ -1,13 +1,13 @@
 <div class="room-card">
-  <div (click)="onSaveRoom()" class="room-card-head" [class.room-card-head_edit]="room.isEdit">
-    <div (dblclick)="onEditRoom()" class="room_title" *ngIf="!room.isEdit; else editMode">
+  <div (click)="onRoomAction('save')" class="room-card-head" [class.room-card-head_edit]="room.isEdit">
+    <div (dblclick)="onRoomAction('edit')" class="room_title" *ngIf="!room.isEdit; else editMode">
       <div (click)="$event.stopPropagation()" class="room_number"> {{room.number}} </div>
       <div (click)="$event.stopPropagation()" class="room_name">{{ room.title | titlecase }}</div>
     </div>
     <div (click)="$event.stopPropagation()" class="room_action">
-      <div (click)="onClearRoom()" class="room_action-item">CLEAR ROOM</div>
-      <div (click)="onDelteRoom()" class="room_action-item">DELETE ROOM</div>
-      <div (click)="onOpenClose()" class="room_action-item"><span class="bracket"
+      <div (click)="onRoomAction('clear')" class="room_action-item">CLEAR ROOM</div>
+      <div (click)="onRoomAction('delete')" class="room_action-item">DELETE ROOM</div>
+      <div (click)="onRoomAction('openClose')" class="room_action-item"><span class="bracket"
           [class.bracket_active]="room.isOpen">></span>
       </div>
     </div>
@@ -21,14 +21,13 @@
 
 
 <ng-template #editMode>
-  <div class="room_title room_title__edit">
+  <div clickOutside (clickOutside)="onRoomAction('save')" class="room_title room_title__edit">
     <div (click)="$event.stopPropagation()" class="room_number">
       <input [(ngModel)]='number' type="number" id="number" autocomplete="off" class="form-control"
         placeholder="Number">
     </div>
     <div (click)="$event.stopPropagation()" class="room_name">
-      <input [(ngModel)]='title' (input)="inputTitleHandler($event)" type="text" id="title" autocomplete="off"
-        class="form-control" placeholder="Title">
+      <input [(ngModel)]="title" type=" text" id="title" autocomplete="off" class="form-control" placeholder="Title">
       <div *ngIf="isRequireMessage" class="warn-message">Title is required</div>
     </div>
   </div>

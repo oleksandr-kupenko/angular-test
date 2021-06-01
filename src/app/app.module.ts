@@ -11,7 +11,6 @@ import { FurnitureComponent } from './furniture/furniture.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RoomsComponent } from './rooms/rooms.component';
 import { RoomComponent } from './rooms/room/room.component';
-import { RoomListComponent } from './rooms/room-list/room-list.component';
 import { FormsModule } from '@angular/forms';
 import { FurnitureItemComponent } from './rooms/room/furniture-item/furniture-item.component';
 import { FurnitureService } from './furniture/furniture.service';
@@ -19,6 +18,7 @@ import { RoomsService } from './rooms/rooms.service';
 import { LocationComponent } from './location/location.component';
 import { MoveDetalisComponent } from './move-detalis/move-detalis.component';
 import { InventoryComponent } from './inventory/inventory.component';
+import { ClickOtsideDeirective } from './rooms/room/click-outside.directive';
 
 @NgModule({
   declarations: [
@@ -27,11 +27,11 @@ import { InventoryComponent } from './inventory/inventory.component';
     HeaderComponent,
     RoomsComponent,
     RoomComponent,
-    RoomListComponent,
     FurnitureItemComponent,
     LocationComponent,
     MoveDetalisComponent,
     InventoryComponent,
+    ClickOtsideDeirective,
   ],
   imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule, MatSliderModule, MatIconModule, HttpClientModule, FormsModule],
   providers: [FurnitureService, RoomsService],

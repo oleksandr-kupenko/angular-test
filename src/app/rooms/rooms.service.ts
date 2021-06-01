@@ -9,14 +9,17 @@ export interface Room {
   furnitureList: MovieForRoom[];
 }
 
-export interface RoomEdit {
+/* export interface RoomEdit {
+  action: string;
   idRoom: number;
-  title?: string;
+  title: string;
   number?: number | null | undefined;
-}
+} */
 
 @Injectable()
 export class RoomsService {
+  cuttentTitleOfEditRoom: string = '';
+
   editOtherRoom = new EventEmitter<number | null>();
 
   roomEditIndex: number | null = null;
@@ -57,7 +60,7 @@ export class RoomsService {
     this.roomEditIndex = this.rooms.length - 1;
   }
 
-  saveRoom(roomData: RoomEdit) {
+  /*   saveRoom(roomData: RoomEdit) {
     if (this.roomEditIndex !== null && this.getPreTitle(this.roomEditIndex) === false) {
       return;
     }
@@ -69,9 +72,9 @@ export class RoomsService {
         this.rooms[this.roomEditIndex].isEdit = false;
       }
     }
-  }
+  } */
 
-  deleteRoom(idRoom: number) {
+  /* deleteRoom(idRoom: number) {
     if (idRoom === this.roomEditIndex) {
       this.roomEditIndex = 0;
     }
@@ -104,7 +107,7 @@ export class RoomsService {
     } else {
       this.openId = null;
     }
-  }
+  } */
 
   addFurniture(movie: MovieForRoom) {
     if (this.openId !== null) {
