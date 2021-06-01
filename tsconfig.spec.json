@@ -5,6 +5,12 @@
     "outDir": "./out-tsc/spec",
     "types": [
       "jasmine"
+    ],
+    "lib": [
+      "es5",
+      "es6",
+      "dom",
+      "dom.iterable"
     ]
   },
   "files": [

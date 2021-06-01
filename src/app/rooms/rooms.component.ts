@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { RoomsService } from './rooms.service';
+import { RoomsService, Room } from './rooms.service';
 
 export interface RoomEdit {
   idRoom: number;
@@ -15,13 +15,16 @@ export interface RoomEdit {
   styleUrls: ['./rooms.component.scss'],
 })
 export class RoomsComponent implements OnInit {
-  rooms = this.roomsService.rooms;
+  rooms: Room[] = [];
 
   constructor(private roomsService: RoomsService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.rooms = this.roomsService.getRooms();
+  }
 
   addRoom() {
-    this.roomsService.addRoom();
+    let newRoom = { number: null, title: '', isEdit: true, isOpen: false, furnitureList: [] };
+    this.rooms = [...this.rooms, newRoom];
   }
 }

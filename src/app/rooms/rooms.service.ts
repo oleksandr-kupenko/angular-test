@@ -31,7 +31,11 @@ export class RoomsService {
 
   constructor(private furnitureService: FurnitureService) {}
 
-  createPreTitle(preIndex: number): boolean {
+  getRooms() {
+    return this.rooms;
+  }
+
+  getPreTitle(preIndex: number): boolean {
     this.editOtherRoom.emit(preIndex);
     if (!this.titlePreComponent) {
       return false;
@@ -41,11 +45,11 @@ export class RoomsService {
   }
 
   addRoom() {
-    if (this.roomEditIndex !== null && this.createPreTitle(this.roomEditIndex) === false) {
+    if (this.roomEditIndex !== null && this.getPreTitle(this.roomEditIndex) === false) {
       return;
     }
     if (this.roomEditIndex !== null) {
-      if (!this.createPreTitle(this.rooms.length - 1)) return;
+      if (!this.getPreTitle(this.rooms.length - 1)) return;
 
       this.rooms[this.roomEditIndex].isEdit = false;
     }
@@ -54,7 +58,7 @@ export class RoomsService {
   }
 
   saveRoom(roomData: RoomEdit) {
-    if (this.roomEditIndex !== null && this.createPreTitle(this.roomEditIndex) === false) {
+    if (this.roomEditIndex !== null && this.getPreTitle(this.roomEditIndex) === false) {
       return;
     }
     if (roomData.title) {
@@ -77,7 +81,7 @@ export class RoomsService {
   editRoom(idRoom: number) {
     if (this.roomEditIndex !== null) {
       const preEditIndex = this.roomEditIndex;
-      this.createPreTitle(preEditIndex);
+      this.getPreTitle(preEditIndex);
       if (!this.titlePreComponent) {
         return;
       }
