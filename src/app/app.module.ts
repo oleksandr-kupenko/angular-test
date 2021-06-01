@@ -16,6 +16,9 @@ import { FormsModule } from '@angular/forms';
 import { FurnitureItemComponent } from './rooms/room/furniture-item/furniture-item.component';
 import { FurnitureService } from './furniture/furniture.service';
 import { RoomsService } from './rooms/rooms.service';
+import { LocationComponent } from './location/location.component';
+import { MoveDetalisComponent } from './move-detalis/move-detalis.component';
+import { InventoryComponent } from './inventory/inventory.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +29,9 @@ import { RoomsService } from './rooms/rooms.service';
     RoomComponent,
     RoomListComponent,
     FurnitureItemComponent,
+    LocationComponent,
+    MoveDetalisComponent,
+    InventoryComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule, MatSliderModule, MatIconModule, HttpClientModule, FormsModule],
   providers: [FurnitureService, RoomsService],

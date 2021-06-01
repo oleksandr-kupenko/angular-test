@@ -7,7 +7,6 @@ import { FurnitureService, Movies } from './furniture.service';
   selector: 'app-furniture',
   templateUrl: './furniture.component.html',
   styleUrls: ['./furniture.component.scss'],
-  providers: [FurnitureService],
 })
 export class FurnitureComponent implements OnInit {
   activeNavItemIndex: number = 0;

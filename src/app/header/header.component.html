@@ -1,1 +1,24 @@
-<h1>Header component</h1>
+<nav class="head-nav-menu">
+  <div routerLink="/" routerLinkActive="head-nav-menu_item__active" [routerLinkActiveOptions]="{exact: true}"
+    class="head-nav-menu_item">
+    <div class="nav_item-title">Inventory</div>
+    <div class="nav_item-desc">4 Items. 102 c.f.</div>
+  </div>
+  <div routerLink="/location" routerLinkActive="head-nav-menu_item__active" class=" head-nav-menu_item">
+    <div class="nav_item-title">Inventory</div>
+    <div class="nav_item-desc">
+      <div class="nav_item-breadcrumbs">
+        <span class="nav_item-breadcrumbs_item">
+          North Hollywood
+        </span>
+        <span class="nav_item-breadcrumbs_item">
+          Parma
+        </span>
+      </div>
+    </div>
+  </div>
+  <div routerLink="/move-detalis" routerLinkActive="head-nav-menu_item__active" class="head-nav-menu_item">
+    <div class="nav_item-title">Move detalis</div>
+    <div class="nav_item-desc">$569.90 Total</div>
+  </div>
+</nav>
