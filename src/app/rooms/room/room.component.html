@@ -1,8 +1,8 @@
 <div class="room-card">
   <div (click)="onRoomAction('save')" class="room-card-head" [class.room-card-head_edit]="room.isEdit">
     <div (dblclick)="onRoomAction('edit')" class="room_title" *ngIf="!room.isEdit; else editMode">
-      <div (click)="$event.stopPropagation()" class="room_number"> {{room.number}} </div>
-      <div (click)="$event.stopPropagation()" class="room_name">{{ room.title | titlecase }}</div>
+      <div (click)="$event.stopPropagation()" class="room_number"> {{room.roomNumber}} </div>
+      <div (click)="$event.stopPropagation()" class="room_name">{{ room.roomTitle | titlecase }}</div>
     </div>
     <div (click)="$event.stopPropagation()" class="room_action">
       <div (click)="onRoomAction('clear')" class="room_action-item">CLEAR ROOM</div>
@@ -23,12 +23,13 @@
 <ng-template #editMode>
   <div clickOutside (clickOutside)="onRoomAction('save')" class="room_title room_title__edit">
     <div (click)="$event.stopPropagation()" class="room_number">
-      <input [(ngModel)]='number' type="number" id="number" autocomplete="off" class="form-control"
+      <input [(ngModel)]='editRoomData.roomNumber' type="number" autocomplete="off" class="form-control"
         placeholder="Number">
     </div>
     <div (click)="$event.stopPropagation()" class="room_name">
-      <input [(ngModel)]="title" type=" text" id="title" autocomplete="off" class="form-control" placeholder="Title">
-      <div *ngIf="isRequireMessage" class="warn-message">Title is required</div>
+      <input [(ngModel)]="editRoomData.roomTitle" #title="ngModel" type="text" required autocomplete="off"
+        class="form-control" placeholder="Title">
+      <div [hidden]="title.valid" class="warn-message">Title is required</div>
     </div>
   </div>
 </ng-template>

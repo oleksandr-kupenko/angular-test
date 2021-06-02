@@ -2,8 +2,8 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { FurnitureService, Movie, MovieForRoom } from '../furniture/furniture.service';
 
 export interface Room {
-  number?: number | null | undefined;
-  title: string;
+  roomNumber?: number | null | undefined;
+  roomTitle: string;
   isEdit: boolean;
   isOpen: boolean;
   furnitureList: MovieForRoom[];
@@ -27,9 +27,9 @@ export class RoomsService {
   openId: number | null = 0;
 
   rooms: Room[] = [
-    { number: 4, title: 'My Bedroom', isEdit: false, isOpen: true, furnitureList: [] },
-    { number: null, title: 'My Kitchen', isEdit: false, isOpen: false, furnitureList: [] },
-    { number: 14, title: 'My Move boxes', isEdit: false, isOpen: false, furnitureList: [] },
+    { roomNumber: 4, roomTitle: 'My Bedroom', isEdit: false, isOpen: true, furnitureList: [] },
+    { roomNumber: null, roomTitle: 'My Kitchen', isEdit: false, isOpen: false, furnitureList: [] },
+    { roomNumber: 14, roomTitle: 'My Move boxes', isEdit: false, isOpen: false, furnitureList: [] },
   ];
 
   constructor(private furnitureService: FurnitureService) {}
@@ -56,7 +56,7 @@ export class RoomsService {
 
       this.rooms[this.roomEditIndex].isEdit = false;
     }
-    this.rooms.push({ number: null, title: '', isEdit: true, isOpen: false, furnitureList: [] });
+    this.rooms.push({ roomNumber: null, roomTitle: '', isEdit: true, isOpen: false, furnitureList: [] });
     this.roomEditIndex = this.rooms.length - 1;
   }
 

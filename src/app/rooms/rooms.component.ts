@@ -5,8 +5,8 @@ import { RoomsService, Room } from './rooms.service';
 export interface RoomEdit {
   action: string;
   idRoom: number;
-  title: string;
-  number?: number | null | undefined;
+  roomTitle: string;
+  roomNumber?: number | null | undefined;
 }
 
 @Component({
@@ -26,12 +26,14 @@ export class RoomsComponent implements OnInit {
         });
         break;
       case 'edit':
-        this.rooms[roomData.idRoom].isEdit = true;
+        let newRooms: Room[] = [...this.rooms];
+        newRooms[roomData.idRoom].isEdit = true;
+        this.rooms = newRooms;
         break;
       case 'save':
-        if (roomData.title) {
-          this.rooms[roomData.idRoom].title = roomData.title;
-          this.rooms[roomData.idRoom].number = roomData.number;
+        if (roomData.roomTitle) {
+          this.rooms[roomData.idRoom].roomTitle = roomData.roomTitle;
+          this.rooms[roomData.idRoom].roomNumber = roomData.roomNumber;
           this.rooms[roomData.idRoom].isEdit = false;
         }
         break;
@@ -63,7 +65,7 @@ export class RoomsComponent implements OnInit {
       this.roomsService.getPreTitle(this.roomsService.roomEditIndex);
     }
 
-    let newRoom = { number: null, title: '', isEdit: true, isOpen: false, furnitureList: [] };
+    let newRoom: Room = { roomNumber: null, roomTitle: '', isEdit: true, isOpen: false, furnitureList: [] };
     this.rooms = [...this.rooms, newRoom];
   }
 }

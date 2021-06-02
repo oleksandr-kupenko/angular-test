@@ -9,21 +9,26 @@ import { RoomEdit } from '../rooms.component';
   styleUrls: ['./room.component.scss'],
 })
 export class RoomComponent implements OnInit {
-  @Input() room: Room = { number: null, title: '', isEdit: false, isOpen: false, furnitureList: [] };
+  @Input() room: Room = { roomNumber: null, roomTitle: '', isEdit: false, isOpen: false, furnitureList: [] };
   @Input() index: number = 0;
 
   @Output() roomAction = new EventEmitter<RoomEdit>();
 
-  title: string = this.room.title;
-  number: number | null | undefined = this.room.number;
+  editRoomData: { roomTitle: string; roomNumber?: number | null | undefined } = {
+    roomTitle: '',
+    roomNumber: null,
+  };
+
   isRequireMessage: boolean = false;
 
   requireValidate() {
     this.isRequireMessage = false;
-    if (!this.title) {
+    if (!this.editRoomData.roomTitle) {
       this.isRequireMessage = true;
     }
   }
+
+  constructor(private roomsService: RoomsService) {}
 
   /*   inputTitleHandler(currentTitle: any) {
     this.roomsService.titlePreComponent = currentTitle.target.value;
@@ -40,8 +45,8 @@ export class RoomComponent implements OnInit {
     this.roomAction.emit({
       idRoom: this.index,
       action: action,
-      title: this.title,
-      number: this.number,
+      roomTitle: this.editRoomData.roomTitle,
+      roomNumber: this.editRoomData.roomNumber,
     });
   }
 
@@ -53,9 +58,10 @@ export class RoomComponent implements OnInit {
     this.roomsService.openCloseRoom(this.index);
   } */
 
-  constructor(private roomsService: RoomsService) {}
-
   ngOnInit(): void {
+    this.editRoomData.roomTitle = this.room.roomTitle;
+    this.editRoomData.roomNumber = this.room.roomNumber;
+
     /* this.title = this.room.title;
     this.number = this.room.number;
     this.roomsService.editOtherRoom.subscribe((preEditRoomIndex: number) => {
