@@ -30,11 +30,13 @@
   color: #403f4c;
 
   .room_number {
+    position: relative;
     font-weight: bold;
     font-size: 24px;
   }
 
   .room_name {
+    width: 150px;
     font-size: 16px;
     padding-left: 11px;
     position: relative;
@@ -87,11 +89,11 @@
 .warn-message {
   position: absolute;
   display: inline-table;
+  font-weight: normal;
   padding: 3px 10px;
   font-size: 0.8rem;
   color: #fff;
   background: #403f4c;
-  left: 36px;
   top: 27px;
 }
 

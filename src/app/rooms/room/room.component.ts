@@ -13,20 +13,13 @@ export class RoomComponent implements OnInit {
   @Input() index: number = 0;
 
   @Output() roomAction = new EventEmitter<RoomEdit>();
+  @Output() toStopEventsBeforeSave = new EventEmitter<boolean>();
 
   editRoomData: { roomTitle: string; roomNumber?: number | null | undefined } = {
     roomTitle: '',
     roomNumber: null,
   };
-
-  isRequireMessage: boolean = false;
-
-  requireValidate() {
-    this.isRequireMessage = false;
-    if (!this.editRoomData.roomTitle) {
-      this.isRequireMessage = true;
-    }
-  }
+  canCloseEdit: boolean = true;
 
   constructor(private roomsService: RoomsService) {}
 
@@ -39,9 +32,17 @@ export class RoomComponent implements OnInit {
   } */
 
   onRoomAction(action: string) {
-    if (action === 'save') {
-      this.requireValidate();
+    /*   if (!this.editRoomData.roomTitle) {
+      this.toStopEventsBeforeSave.emit(true);
+      return;
+    } */
+    this.canCloseEdit = this.roomsService.isCanCloseEdit;
+    if (!this.editRoomData.roomTitle) {
+      this.canCloseEdit = false;
+      this.roomsService.isCanCloseEdit = false;
     }
+    console.log(this.canCloseEdit);
+    this.toStopEventsBeforeSave.emit(false);
     this.roomAction.emit({
       idRoom: this.index,
       action: action,
@@ -61,6 +62,7 @@ export class RoomComponent implements OnInit {
   ngOnInit(): void {
     this.editRoomData.roomTitle = this.room.roomTitle;
     this.editRoomData.roomNumber = this.room.roomNumber;
+    this.canCloseEdit = this.roomsService.isCanCloseEdit;
 
     /* this.title = this.room.title;
     this.number = this.room.number;

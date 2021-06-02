@@ -1,7 +1,8 @@
 <div class="rooms-container">
   <div class="rooms">
     <app-room *ngFor="let room of rooms; let idx = index" [room]="room" [index]="idx"
-      (roomAction)="onRoomAction($event)">
+      (roomAction)="onRoomAction($event)" (toStopEventsBeforeSave)="onStopAllEventsBeforeSave($event)">
+
     </app-room>
   </div>
 

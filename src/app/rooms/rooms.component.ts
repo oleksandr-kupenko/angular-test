@@ -16,9 +16,22 @@ export interface RoomEdit {
 })
 export class RoomsComponent implements OnInit {
   rooms: Room[] = [];
-  openId: number | null = null;
+  openId: number | null = 0;
+  isStopedEventsBeforeSave: boolean = false;
+
+  onStopAllEventsBeforeSave(status: boolean) {
+    this.isStopedEventsBeforeSave = status;
+    console.log(this.isStopedEventsBeforeSave);
+  }
+
+  checkRoomWithoutTitle(): boolean {
+    const result = document.getElementById('edit-mode') ? true : false;
+    console.log('result', result);
+    return result;
+  }
 
   onRoomAction(roomData: RoomEdit): void {
+    const title = roomData.roomTitle;
     switch (roomData.action) {
       case 'delete':
         this.rooms = this.rooms.filter((room, index) => {
@@ -26,6 +39,9 @@ export class RoomsComponent implements OnInit {
         });
         break;
       case 'edit':
+        if (!this.roomsService.isCanCloseEdit) {
+          return;
+        }
         let newRooms: Room[] = [...this.rooms];
         newRooms[roomData.idRoom].isEdit = true;
         this.rooms = newRooms;
@@ -59,13 +75,17 @@ export class RoomsComponent implements OnInit {
     this.rooms = this.roomsService.getRooms();
   }
 
-  addRoom() {
-    console.log(this.roomsService.titlePreComponent);
-    if (this.roomsService.roomEditIndex != null) {
-      this.roomsService.getPreTitle(this.roomsService.roomEditIndex);
-    }
+  checkCanAddRoom(preCountRooms: number, postCountRooms: number): void {
+    preCountRooms === postCountRooms ? (this.roomsService.isCanCloseEdit = false) : (this.roomsService.isCanCloseEdit = true);
+  }
 
-    let newRoom: Room = { roomNumber: null, roomTitle: '', isEdit: true, isOpen: false, furnitureList: [] };
-    this.rooms = [...this.rooms, newRoom];
+  addRoom() {
+    const preCountRooms: number = this.rooms.length;
+    if (!this.checkRoomWithoutTitle()) {
+      let newRoom: Room = { roomNumber: null, roomTitle: '', isEdit: true, isOpen: false, furnitureList: [] };
+      this.rooms = [...this.rooms, newRoom];
+    }
+    const postCountRooms: number = this.rooms.length;
+    this.checkCanAddRoom(preCountRooms, postCountRooms);
   }
 }

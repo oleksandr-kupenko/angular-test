@@ -20,7 +20,9 @@ export interface Room {
 export class RoomsService {
   cuttentTitleOfEditRoom: string = '';
 
-  editOtherRoom = new EventEmitter<number | null>();
+  toStopEventsBeforeSave = new EventEmitter<number | null>();
+
+  isCanCloseEdit: boolean = true;
 
   roomEditIndex: number | null = null;
   titlePreComponent: string = '';
@@ -37,7 +39,7 @@ export class RoomsService {
   getRooms() {
     return this.rooms;
   }
-
+  /* 
   getPreTitle(preIndex: number): boolean {
     this.editOtherRoom.emit(preIndex);
     if (!this.titlePreComponent) {
@@ -45,20 +47,15 @@ export class RoomsService {
     } else {
       return true;
     }
-  }
+  } */
 
-  addRoom() {
-    if (this.roomEditIndex !== null && this.getPreTitle(this.roomEditIndex) === false) {
-      return;
+  /*   addRoom() {
+    if (!this.isStopedEventsBeforeSave) {
+      debugger;
+      this.rooms.push({ roomNumber: null, roomTitle: '', isEdit: true, isOpen: false, furnitureList: [] });
+      this.roomEditIndex = this.rooms.length - 1;
     }
-    if (this.roomEditIndex !== null) {
-      if (!this.getPreTitle(this.rooms.length - 1)) return;
-
-      this.rooms[this.roomEditIndex].isEdit = false;
-    }
-    this.rooms.push({ roomNumber: null, roomTitle: '', isEdit: true, isOpen: false, furnitureList: [] });
-    this.roomEditIndex = this.rooms.length - 1;
-  }
+  } */
 
   /*   saveRoom(roomData: RoomEdit) {
     if (this.roomEditIndex !== null && this.getPreTitle(this.roomEditIndex) === false) {
