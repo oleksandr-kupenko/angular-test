@@ -1,8 +1,8 @@
 <div class="room-card">
   <div (click)="onRoomAction('save')" class="room-card-head" [class.room-card-head_edit]="room.isEdit">
     <div (dblclick)="onRoomAction('edit')" class="room_title" *ngIf="!room.isEdit; else editMode">
-      <div (click)="$event.stopPropagation()" class="room_number"> {{room.roomNumber}} </div>
-      <div (click)="$event.stopPropagation()" class="room_name">{{ room.roomTitle | titlecase }}</div>
+      <div class="room_number"> {{room.roomNumber}} </div>
+      <div class="room_name">{{ room.roomTitle | titlecase }}</div>
     </div>
     <div (click)="$event.stopPropagation()" class="room_action">
       <div (click)="onRoomAction('clear')" class="room_action-item">CLEAR ROOM</div>

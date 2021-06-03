@@ -27,7 +27,7 @@ export class RoomsComponent implements OnInit {
     this.roomsService.subAmountFurnitureItemInRoom.subscribe((idxFurnitur) => this.subAmountFurnitureItem(idxFurnitur));
   }
 
-  checkRoomWithoutTitle(): boolean {
+  checkIsDublicateEditMode(): boolean {
     const result = document.getElementById('edit-mode') ? true : false;
     return result;
   }
@@ -41,7 +41,7 @@ export class RoomsComponent implements OnInit {
         });
         break;
       case 'edit':
-        if (!this.roomsService.isCanCloseEdit) {
+        if (!this.roomsService.isCanCloseEdit || this.checkIsDublicateEditMode()) {
           return;
         }
         let newRooms: Room[] = [...this.rooms];
@@ -53,6 +53,7 @@ export class RoomsComponent implements OnInit {
           this.rooms[roomData.idRoom].roomTitle = roomData.roomTitle;
           this.rooms[roomData.idRoom].roomNumber = roomData.roomNumber;
           this.rooms[roomData.idRoom].isEdit = false;
+          this.roomsService.isCanCloseEdit = true;
         }
         break;
       case 'openClose':
@@ -118,7 +119,7 @@ export class RoomsComponent implements OnInit {
 
   addRoom() {
     const preCountRooms: number = this.rooms.length;
-    if (!this.checkRoomWithoutTitle()) {
+    if (!this.checkIsDublicateEditMode()) {
       let newRoom: Room = { roomNumber: null, roomTitle: '', isEdit: true, isOpen: false, furnitureList: [] };
       this.rooms = [...this.rooms, newRoom];
     }
