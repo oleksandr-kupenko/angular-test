@@ -19,13 +19,9 @@ export class RoomsComponent implements OnInit {
   rooms: Room[] = [];
   openId: number | null = 0;
   isStopedEventsBeforeSave: boolean = false;
+  isEditModeNow: number | null = null;
 
-  ngOnInit(): void {
-    this.rooms = this.roomsService.getRooms();
-    this.roomsService.sendFurnitureToRoom.subscribe((movie) => this.addFurnitureItemToRoom(movie));
-    this.roomsService.addAmountFurnitureItemInRoom.subscribe((idxFurnitur) => this.addAmountFurnitureItem(idxFurnitur));
-    this.roomsService.subAmountFurnitureItemInRoom.subscribe((idxFurnitur) => this.subAmountFurnitureItem(idxFurnitur));
-  }
+  constructor(private roomsService: RoomsService) {}
 
   checkIsDublicateEditMode(): boolean {
     const result = document.getElementById('edit-mode') ? true : false;
@@ -44,9 +40,10 @@ export class RoomsComponent implements OnInit {
         if (!this.roomsService.isCanCloseEdit || this.checkIsDublicateEditMode()) {
           return;
         }
-        let newRooms: Room[] = [...this.rooms];
-        newRooms[roomData.idRoom].isEdit = true;
-        this.rooms = newRooms;
+        let editRooms: Room[] = [...this.rooms];
+        editRooms[roomData.idRoom].isEdit = true;
+        this.rooms = editRooms;
+        this.isEditModeNow = roomData.idRoom;
         break;
       case 'save':
         if (roomData.roomTitle) {
@@ -54,6 +51,7 @@ export class RoomsComponent implements OnInit {
           this.rooms[roomData.idRoom].roomNumber = roomData.roomNumber;
           this.rooms[roomData.idRoom].isEdit = false;
           this.roomsService.isCanCloseEdit = true;
+          this.isEditModeNow = null;
         }
         break;
       case 'openClose':
@@ -70,12 +68,13 @@ export class RoomsComponent implements OnInit {
       case 'clear':
         if (this.openId !== null) {
           this.rooms[this.openId].furnitureList = [];
+          this.roomsService.changeAmountFurnitureInRoom.emit(this.openId);
         }
         break;
     }
   }
 
-  addFurnitureItemToRoom(movie: MovieForRoom) {
+  addFurnitureItemToRoom(movie: MovieForRoom): void {
     if (this.openId !== null) {
       const checkExist = this.rooms[this.openId].furnitureList.some((movieItem) => {
         return movieItem.id === movie.id;
@@ -91,39 +90,53 @@ export class RoomsComponent implements OnInit {
           .indexOf(movie.id);
         this.rooms[this.openId].furnitureList[currentIndex].count++;
       }
+      this.roomsService.changeAmountFurnitureInRoom.emit(this.openId);
     }
   }
 
-  addAmountFurnitureItem(idxFurnitur: number) {
+  addAmountFurnitureItem(idxFurnitur: number): void {
     if (this.openId !== null) {
       this.rooms[this.openId].furnitureList[idxFurnitur].count++;
+      this.roomsService.changeAmountFurnitureInRoom.emit(this.openId);
     }
   }
 
-  subAmountFurnitureItem(idxFurnitur: number) {
+  subAmountFurnitureItem(idxFurnitur: number): void {
     if (this.openId !== null) {
       const currentFurnitureList = this.rooms[this.openId].furnitureList;
       if (currentFurnitureList[idxFurnitur].count > 1) {
         this.rooms[this.openId].furnitureList[idxFurnitur].count--;
+        this.roomsService.changeAmountFurnitureInRoom.emit(this.openId);
       } else {
         this.rooms[this.openId].furnitureList = currentFurnitureList.filter((item, index) => index != idxFurnitur);
       }
     }
   }
 
-  constructor(private roomsService: RoomsService) {}
-
-  checkCanAddRoom(preCountRooms: number, postCountRooms: number): void {
+  checkIfNeedRequireWarning(preCountRooms: number, postCountRooms: number): void {
     preCountRooms === postCountRooms ? (this.roomsService.isCanCloseEdit = false) : (this.roomsService.isCanCloseEdit = true);
   }
 
-  addRoom() {
-    const preCountRooms: number = this.rooms.length;
+  addRoom(): void {
+    const preAmountRooms: number = this.rooms.length;
+    if (this.isEditModeNow != null) {
+      this.roomsService.trySaveEditModeRoom.emit(this.isEditModeNow);
+    }
     if (!this.checkIsDublicateEditMode()) {
       let newRoom: Room = { roomNumber: null, roomTitle: '', isEdit: true, isOpen: false, furnitureList: [] };
       this.rooms = [...this.rooms, newRoom];
     }
-    const postCountRooms: number = this.rooms.length;
-    this.checkCanAddRoom(preCountRooms, postCountRooms);
+    const postAmountRooms: number = this.rooms.length;
+    this.checkIfNeedRequireWarning(preAmountRooms, postAmountRooms);
+    console.log(this.roomsService.isCanCloseEdit);
+  }
+
+  ngOnInit(): void {
+    this.rooms = this.roomsService.getRooms();
+    this.roomsService.sendFurnitureToRoom.subscribe((movie) => {
+      this.addFurnitureItemToRoom(movie);
+    });
+    this.roomsService.addFurnitureItemToRoom.subscribe((idxFurnitur) => this.addAmountFurnitureItem(idxFurnitur));
+    this.roomsService.subFurnitureItemToRoom.subscribe((idxFurnitur) => this.subAmountFurnitureItem(idxFurnitur));
   }
 }

@@ -39,8 +39,6 @@ export interface NavItems {
 
 @Injectable()
 export class FurnitureService {
-  constructor(private http: HttpClient) {}
-
   navItems: NavItems[] = [
     { title: 'Action', icon: 'weekend', genreId: 28, isActive: true },
     { title: 'Adventure', icon: 'bed', genreId: 12, isActive: false },
@@ -55,9 +53,15 @@ export class FurnitureService {
 
   test: string = 'test';
 
+  constructor(private http: HttpClient) {}
+
   getMoviesList(genreId: number): Observable<Movies> {
     return this.http.get<Movies>(
       `https://api.themoviedb.org/3/discover/movie?api_key=2457bcf1079900ec3973765a5a018402&with_genres=${genreId}&page=1`
     );
+  }
+
+  testGetIdFromComponent(id: number) {
+    return console.log('from service', id);
   }
 }

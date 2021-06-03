@@ -28,6 +28,7 @@ $dgrey: #57565c;
     height: 56px;
     color: $mgrey;
     border-bottom: 1px solid #ececec;
+    cursor: pointer;
     &:first-child {
       height: 52px;
       color: #a3a3a3;
@@ -43,6 +44,7 @@ $dgrey: #57565c;
 
 .furniture-nav_item__active {
   background: $dgrey;
+  cursor: no-drop !important;
 }
 
 .furniture-search {

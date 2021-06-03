@@ -22,8 +22,11 @@ export class RoomsService {
 
   toStopEventsBeforeSave = new EventEmitter<number | null>();
   sendFurnitureToRoom = new EventEmitter<MovieForRoom>();
-  addAmountFurnitureItemInRoom = new EventEmitter<number>();
-  subAmountFurnitureItemInRoom = new EventEmitter<number>();
+  addFurnitureItemToRoom = new EventEmitter<number>();
+  subFurnitureItemToRoom = new EventEmitter<number>();
+  trySaveEditModeRoom = new EventEmitter<number>();
+  addedNewFurnitureItem = new EventEmitter<number>();
+  changeAmountFurnitureInRoom = new EventEmitter<number>();
 
   isCanCloseEdit: boolean = true;
 

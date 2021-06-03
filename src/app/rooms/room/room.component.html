@@ -1,8 +1,9 @@
 <div class="room-card">
   <div (click)="onRoomAction('save')" class="room-card-head" [class.room-card-head_edit]="room.isEdit">
-    <div (dblclick)="onRoomAction('edit')" class="room_title" *ngIf="!room.isEdit; else editMode">
-      <div class="room_number"> {{room.roomNumber}} </div>
-      <div class="room_name">{{ room.roomTitle | titlecase }}</div>
+    <div class="room_title">
+      <div class="room_number"> {{countFurniture > 0 ? countFurniture : ''}} </div>
+      <div *ngIf="!room.isEdit; else editMode" (dblclick)="onRoomAction('edit')" class="room_name">{{ room.roomTitle |
+        titlecase }}</div>
     </div>
     <div (click)="$event.stopPropagation()" class="room_action">
       <div (click)="onRoomAction('clear')" class="room_action-item">CLEAR ROOM</div>
@@ -21,17 +22,18 @@
 
 
 <ng-template #editMode>
-  <div clickOutside (clickOutside)="onRoomAction('save')" id="edit-mode" class="room_title room_title__edit">
+  <!--   <div clickOutside (clickOutside)="onRoomAction('save')" id="edit-mode" class="room_title room_title__edit">
     <div (click)="$event.stopPropagation()" class="room_number">
       <input [(ngModel)]="editRoomData.roomNumber" #roomNumber="ngModel" type="number" pattern="[1-9][0-9]*"
         autocomplete="off" class="form-control" placeholder="Number">
       <div [hidden]="roomNumber.valid" class="warn-message">Only whole numbers</div>
-    </div>
-    <div (click)="$event.stopPropagation()" class="room_name">
-      <input [(ngModel)]="editRoomData.roomTitle" #title="ngModel" type="text" required autocomplete="off"
-        class="form-control" placeholder="Title">
-      <div *ngIf="(canCloseEdit && title.invalid) || (title.invalid && title.touched)" class="warn-message">Title is
-        required</div>
-    </div>
+    </div> -->
+  <div clickOutside (clickOutside)="onRoomAction('save')" (click)="$event.stopPropagation()" id="edit-mode"
+    class="room_name">
+    <input [(ngModel)]="editRoomData.roomTitle" #title="ngModel" type="text" required autocomplete="off"
+      class="form-control" placeholder="Title">
+    <div *ngIf="(!hideRequireVarning) || (title.invalid && title.touched)" class="warn-message">Title is
+      required</div>
   </div>
+  <!-- </div> -->
 </ng-template>

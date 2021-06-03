@@ -14,30 +14,18 @@ export class RoomComponent implements OnInit {
 
   @Output() roomAction = new EventEmitter<RoomEdit>();
   @Output() toStopEventsBeforeSave = new EventEmitter<boolean>();
+  countFurniture: number = 0;
 
   editRoomData: { roomTitle: string; roomNumber?: number | null | undefined } = {
     roomTitle: '',
     roomNumber: null,
   };
-  canCloseEdit: boolean = true;
+  hideRequireVarning: boolean = true;
 
   constructor(private roomsService: RoomsService) {}
 
-  /*   inputTitleHandler(currentTitle: any) {
-    this.roomsService.titlePreComponent = currentTitle.target.value;
-  } */
-
-  /*   onDelteRoom() {
-    this.roomsService.deleteRoom(this.index);
-  } */
-
   onRoomAction(action: string) {
-    this.canCloseEdit = this.roomsService.isCanCloseEdit;
-    if (!this.editRoomData.roomTitle) {
-      this.canCloseEdit = false;
-      this.roomsService.isCanCloseEdit = false;
-    }
-    console.log(this.canCloseEdit);
+    this.hideRequireVarning = this.roomsService.isCanCloseEdit;
     this.toStopEventsBeforeSave.emit(false);
     this.roomAction.emit({
       idRoom: this.index,
@@ -47,30 +35,27 @@ export class RoomComponent implements OnInit {
     });
   }
 
-  /* onEditRoom() {
-    this.roomsService.editRoom(this.index);
+  countFurnitureInRoom() {
+    console.log(this.room.furnitureList);
   }
-
-  onOpenClose() {
-    this.roomsService.openCloseRoom(this.index);
-  } */
 
   ngOnInit(): void {
     this.editRoomData.roomTitle = this.room.roomTitle;
     this.editRoomData.roomNumber = this.room.roomNumber;
-    this.canCloseEdit = this.roomsService.isCanCloseEdit;
-
-    /* this.title = this.room.title;
-    this.number = this.room.number;
-    this.roomsService.editOtherRoom.subscribe((preEditRoomIndex: number) => {
-      if (preEditRoomIndex === this.index) {
-        this.roomsService.titlePreComponent = this.title;
-        this.title ? this.onSaveRoom() : (this.isRequireMessage = true);
+    this.hideRequireVarning = this.roomsService.isCanCloseEdit;
+    this.roomsService.trySaveEditModeRoom.subscribe((id: number) => {
+      if (this.index === id) {
+        this.onRoomAction('save');
       }
-    });*/
+    });
+    this.roomsService.changeAmountFurnitureInRoom.subscribe((id: number) => {
+      if (id === this.index) {
+        let amountFurniture: number = 0;
+        this.room.furnitureList.forEach((furniture) => {
+          amountFurniture = amountFurniture + furniture.count;
+        });
+        this.countFurniture = amountFurniture;
+      }
+    });
   }
-
-  /* onClearRoom() {
-    this.roomsService.clearRoom();
-  } */
 }
