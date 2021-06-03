@@ -34,10 +34,10 @@ export class FurnitureItemComponent implements OnInit {
   ngOnInit(): void {}
 
   onIncrementCount() {
-    this.roomService.addAmountFurnitureItem(this.index);
+    this.roomService.addAmountFurnitureItemInRoom.emit(this.index);
   }
 
   onDecrementCount() {
-    this.roomService.subAmountFurnitureItem(this.index);
+    this.roomService.subAmountFurnitureItemInRoom.emit(this.index);
   }
 }

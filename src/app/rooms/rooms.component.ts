@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MovieForRoom } from '../furniture/furniture.service';
 
 import { RoomsService, Room } from './rooms.service';
 
@@ -19,14 +20,15 @@ export class RoomsComponent implements OnInit {
   openId: number | null = 0;
   isStopedEventsBeforeSave: boolean = false;
 
-  onStopAllEventsBeforeSave(status: boolean) {
-    this.isStopedEventsBeforeSave = status;
-    console.log(this.isStopedEventsBeforeSave);
+  ngOnInit(): void {
+    this.rooms = this.roomsService.getRooms();
+    this.roomsService.sendFurnitureToRoom.subscribe((movie) => this.addFurnitureItemToRoom(movie));
+    this.roomsService.addAmountFurnitureItemInRoom.subscribe((idxFurnitur) => this.addAmountFurnitureItem(idxFurnitur));
+    this.roomsService.subAmountFurnitureItemInRoom.subscribe((idxFurnitur) => this.subAmountFurnitureItem(idxFurnitur));
   }
 
   checkRoomWithoutTitle(): boolean {
     const result = document.getElementById('edit-mode') ? true : false;
-    console.log('result', result);
     return result;
   }
 
@@ -65,15 +67,50 @@ export class RoomsComponent implements OnInit {
         }
         break;
       case 'clear':
+        if (this.openId !== null) {
+          this.rooms[this.openId].furnitureList = [];
+        }
         break;
     }
   }
 
-  constructor(private roomsService: RoomsService) {}
-
-  ngOnInit(): void {
-    this.rooms = this.roomsService.getRooms();
+  addFurnitureItemToRoom(movie: MovieForRoom) {
+    if (this.openId !== null) {
+      const checkExist = this.rooms[this.openId].furnitureList.some((movieItem) => {
+        return movieItem.id === movie.id;
+      });
+      if (!checkExist) {
+        movie.count = 1;
+        this.rooms[this.openId].furnitureList.push(movie);
+      } else {
+        const currentIndex = this.rooms[this.openId].furnitureList
+          .map((movieItem) => {
+            return movieItem.id;
+          })
+          .indexOf(movie.id);
+        this.rooms[this.openId].furnitureList[currentIndex].count++;
+      }
+    }
   }
+
+  addAmountFurnitureItem(idxFurnitur: number) {
+    if (this.openId !== null) {
+      this.rooms[this.openId].furnitureList[idxFurnitur].count++;
+    }
+  }
+
+  subAmountFurnitureItem(idxFurnitur: number) {
+    if (this.openId !== null) {
+      const currentFurnitureList = this.rooms[this.openId].furnitureList;
+      if (currentFurnitureList[idxFurnitur].count > 1) {
+        this.rooms[this.openId].furnitureList[idxFurnitur].count--;
+      } else {
+        this.rooms[this.openId].furnitureList = currentFurnitureList.filter((item, index) => index != idxFurnitur);
+      }
+    }
+  }
+
+  constructor(private roomsService: RoomsService) {}
 
   checkCanAddRoom(preCountRooms: number, postCountRooms: number): void {
     preCountRooms === postCountRooms ? (this.roomsService.isCanCloseEdit = false) : (this.roomsService.isCanCloseEdit = true);

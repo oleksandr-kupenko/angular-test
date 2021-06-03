@@ -32,10 +32,6 @@ export class RoomComponent implements OnInit {
   } */
 
   onRoomAction(action: string) {
-    /*   if (!this.editRoomData.roomTitle) {
-      this.toStopEventsBeforeSave.emit(true);
-      return;
-    } */
     this.canCloseEdit = this.roomsService.isCanCloseEdit;
     if (!this.editRoomData.roomTitle) {
       this.canCloseEdit = false;
