@@ -1,5 +1,5 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { FurnitureService, Movie, MovieForRoom } from '../furniture/furniture.service';
+import { EventEmitter, Injectable, OnDestroy } from '@angular/core';
+import { FurnitureService, MovieForRoom } from '../furniture/furniture.service';
 
 export interface Room {
   roomNumber?: number | null | undefined;
@@ -9,16 +9,13 @@ export interface Room {
   furnitureList: MovieForRoom[];
 }
 
-/* export interface RoomEdit {
-  action: string;
-  idRoom: number;
-  title: string;
-  number?: number | null | undefined;
-} */
-
 @Injectable()
-export class RoomsService {
+export class RoomsService implements OnDestroy {
   cuttentTitleOfEditRoom: string = '';
+
+  ngOnDestroy(): void {
+    console.log('dead rooms');
+  }
 
   toStopEventsBeforeSave = new EventEmitter<number | null>();
   sendFurnitureToRoom = new EventEmitter<MovieForRoom>();
@@ -31,7 +28,7 @@ export class RoomsService {
   isCanCloseEdit: boolean = true;
 
   rooms: Room[] = [
-    { roomNumber: 4, roomTitle: 'My Bedroom', isEdit: false, isOpen: true, furnitureList: [] },
+    { roomNumber: 4, roomTitle: 'My Bedroom', isEdit: false, isOpen: false, furnitureList: [] },
     { roomNumber: null, roomTitle: 'My Kitchen', isEdit: false, isOpen: false, furnitureList: [] },
     { roomNumber: 14, roomTitle: 'My Move boxes', isEdit: false, isOpen: false, furnitureList: [] },
   ];

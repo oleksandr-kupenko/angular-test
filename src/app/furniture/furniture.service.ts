@@ -23,7 +23,7 @@ export interface MovieForRoom extends Movie {
   count: number;
 }
 
-export interface Movies {
+export interface MoviesTable {
   page: number;
   results: Movie[];
   total_result: number;
@@ -55,8 +55,8 @@ export class FurnitureService {
 
   constructor(private http: HttpClient) {}
 
-  getMoviesList(genreId: number): Observable<Movies> {
-    return this.http.get<Movies>(
+  getMoviesList(genreId: number): Observable<MoviesTable> {
+    return this.http.get<MoviesTable>(
       `https://api.themoviedb.org/3/discover/movie?api_key=2457bcf1079900ec3973765a5a018402&with_genres=${genreId}&page=1`
     );
   }

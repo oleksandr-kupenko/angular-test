@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RoomsService } from '../rooms/rooms.service';
 
-import { FurnitureService, Movies } from './furniture.service';
+import { FurnitureService, MoviesTable } from './furniture.service';
 
 @Component({
   selector: 'app-furniture',
@@ -11,7 +11,7 @@ import { FurnitureService, Movies } from './furniture.service';
 export class FurnitureComponent implements OnInit {
   activeNavItemIndex: number = 0;
   genreId = 28;
-  moviesList: Movies = {
+  moviesList: MoviesTable = {
     page: 0,
     results: [],
     total_result: 0,
@@ -22,7 +22,7 @@ export class FurnitureComponent implements OnInit {
   constructor(private furnitureService: FurnitureService, private roomService: RoomsService) {}
 
   getFurnitureList(genreId: number = this.genreId): void {
-    this.furnitureService.getMoviesList(genreId).subscribe((movies: Movies) => (this.moviesList = movies));
+    this.furnitureService.getMoviesList(genreId).subscribe((movies: MoviesTable) => (this.moviesList = movies));
   }
 
   ngOnInit(): void {

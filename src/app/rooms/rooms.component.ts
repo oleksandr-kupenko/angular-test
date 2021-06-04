@@ -17,7 +17,7 @@ export interface RoomEdit {
 })
 export class RoomsComponent implements OnInit {
   rooms: Room[] = [];
-  openId: number | null = 0;
+  openId: number | null = null;
   isStopedEventsBeforeSave: boolean = false;
   isEditModeNow: number | null = null;
 
