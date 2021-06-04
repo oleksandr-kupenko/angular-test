@@ -28,50 +28,63 @@ export class RoomsComponent implements OnInit {
     return result;
   }
 
-  onRoomAction(roomData: RoomEdit): void {
-    const title = roomData.roomTitle;
-    switch (roomData.action) {
-      case 'delete':
-        this.rooms = this.rooms.filter((room, index) => {
-          return index != roomData.idRoom;
-        });
-        break;
-      case 'edit':
-        if (!this.roomsService.isCanCloseEdit || this.checkIsDublicateEditMode()) {
-          return;
-        }
-        let editRooms: Room[] = [...this.rooms];
-        editRooms[roomData.idRoom].isEdit = true;
-        this.rooms = editRooms;
-        this.isEditModeNow = roomData.idRoom;
-        break;
-      case 'save':
-        if (roomData.roomTitle) {
-          this.rooms[roomData.idRoom].roomTitle = roomData.roomTitle;
-          this.rooms[roomData.idRoom].roomNumber = roomData.roomNumber;
-          this.rooms[roomData.idRoom].isEdit = false;
-          this.roomsService.isCanCloseEdit = true;
-          this.isEditModeNow = null;
-        }
-        break;
-      case 'openClose':
-        if (this.openId !== null && this.openId !== roomData.idRoom) {
-          this.rooms[this.openId].isOpen = false;
-        }
-        this.rooms[roomData.idRoom].isOpen = !this.rooms[roomData.idRoom].isOpen;
-        if (this.rooms[roomData.idRoom].isOpen) {
-          this.openId = roomData.idRoom;
-        } else {
-          this.openId = null;
-        }
-        break;
-      case 'clear':
-        if (this.openId !== null) {
-          this.rooms[this.openId].furnitureList = [];
-          this.roomsService.changeAmountFurnitureInRoom.emit(this.openId);
-        }
-        break;
+  deleteRoom(roomData: RoomEdit) {
+    this.rooms = this.rooms.filter((room, index) => {
+      return index != roomData.idRoom;
+    });
+  }
+
+  editRoom(roomData: RoomEdit) {
+    if (!this.roomsService.isCanCloseEdit || this.checkIsDublicateEditMode()) {
+      return;
     }
+    let editRooms: Room[] = [...this.rooms];
+    editRooms[roomData.idRoom].isEdit = true;
+    this.rooms = editRooms;
+    this.isEditModeNow = roomData.idRoom;
+  }
+
+  saveRoom(roomData: RoomEdit) {
+    if (roomData.roomTitle) {
+      this.rooms[roomData.idRoom].roomTitle = roomData.roomTitle;
+      this.rooms[roomData.idRoom].roomNumber = roomData.roomNumber;
+      this.rooms[roomData.idRoom].isEdit = false;
+      this.roomsService.isCanCloseEdit = true;
+      this.isEditModeNow = null;
+    }
+  }
+
+  openCloseRoom(roomData: RoomEdit) {
+    if (this.openId !== null && this.openId !== roomData.idRoom) {
+      this.rooms[this.openId].isOpen = false;
+    }
+    this.rooms[roomData.idRoom].isOpen = !this.rooms[roomData.idRoom].isOpen;
+    if (this.rooms[roomData.idRoom].isOpen) {
+      this.openId = roomData.idRoom;
+    } else {
+      this.openId = null;
+    }
+  }
+
+  clearRoom(roomData: RoomEdit) {
+    if (this.openId !== null) {
+      this.rooms[this.openId].furnitureList = [];
+      this.roomsService.changeAmountFurnitureInRoom.emit(this.openId);
+    }
+  }
+
+  addRoom(): void {
+    const preAmountRooms: number = this.rooms.length;
+    if (this.isEditModeNow != null) {
+      this.roomsService.trySaveEditModeRoom.emit(this.isEditModeNow);
+    }
+    if (!this.checkIsDublicateEditMode()) {
+      let newRoom: Room = { roomNumber: null, roomTitle: '', isEdit: true, isOpen: false, furnitureList: [] };
+      this.rooms = [...this.rooms, newRoom];
+    }
+    const postAmountRooms: number = this.rooms.length;
+    this.checkIfNeedRequireWarning(preAmountRooms, postAmountRooms);
+    console.log(this.roomsService.isCanCloseEdit);
   }
 
   addFurnitureItemToRoom(movie: MovieForRoom): void {
@@ -117,18 +130,25 @@ export class RoomsComponent implements OnInit {
     preCountRooms === postCountRooms ? (this.roomsService.isCanCloseEdit = false) : (this.roomsService.isCanCloseEdit = true);
   }
 
-  addRoom(): void {
-    const preAmountRooms: number = this.rooms.length;
-    if (this.isEditModeNow != null) {
-      this.roomsService.trySaveEditModeRoom.emit(this.isEditModeNow);
+  onRoomAction(roomData: RoomEdit): void {
+    const title = roomData.roomTitle;
+    switch (roomData.action) {
+      case 'delete':
+        this.deleteRoom(roomData);
+        break;
+      case 'edit':
+        this.editRoom(roomData);
+        break;
+      case 'save':
+        this.saveRoom(roomData);
+        break;
+      case 'openClose':
+        this.openCloseRoom(roomData);
+        break;
+      case 'clear':
+        this.clearRoom(roomData);
+        break;
     }
-    if (!this.checkIsDublicateEditMode()) {
-      let newRoom: Room = { roomNumber: null, roomTitle: '', isEdit: true, isOpen: false, furnitureList: [] };
-      this.rooms = [...this.rooms, newRoom];
-    }
-    const postAmountRooms: number = this.rooms.length;
-    this.checkIfNeedRequireWarning(preAmountRooms, postAmountRooms);
-    console.log(this.roomsService.isCanCloseEdit);
   }
 
   ngOnInit(): void {
