@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable, OnDestroy } from '@angular/core';
 import { FurnitureService, MovieForRoom } from '../furniture/furniture.service';
+import { Subject } from 'rxjs';
 
 export interface Room {
   roomNumber?: number | null | undefined;
@@ -17,9 +18,9 @@ export class RoomsService implements OnDestroy {
     console.log('dead rooms');
   }
 
-  toStopEventsBeforeSave = new EventEmitter<number | null>();
-  sendFurnitureToRoom = new EventEmitter<MovieForRoom>();
-  addFurnitureItemToRoom = new EventEmitter<number>();
+  toStopEventsBeforeSave = new Subject<number | null>(); //так??
+  sendFurnitureToRoom: Subject<MovieForRoom> = new Subject(); // так ???
+  addFurnitureItemToRoom: Subject<number> = new Subject<number>(); // или  так???
   subFurnitureItemToRoom = new EventEmitter<number>();
   trySaveEditModeRoom = new EventEmitter<number>();
   addedNewFurnitureItem = new EventEmitter<number>();
@@ -36,6 +37,6 @@ export class RoomsService implements OnDestroy {
   constructor(private furnitureService: FurnitureService) {}
 
   getRooms() {
-    return this.rooms;
+    return JSON.parse(JSON.stringify(this.rooms));
   }
 }

@@ -20,6 +20,7 @@ import { MoveDetalisComponent } from './move-detalis/move-detalis.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { ClickOtsideDeirective } from './rooms/room/click-outside.directive';
 import { TestService } from './test.service';
+import { DataStorageService } from 'src/shared/data-storage.service';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import { TestService } from './test.service';
     ClickOtsideDeirective,
   ],
   imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule, MatSliderModule, MatIconModule, HttpClientModule, FormsModule],
-  providers: [FurnitureService, RoomsService, TestService],
+  providers: [FurnitureService, RoomsService, TestService, DataStorageService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

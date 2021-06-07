@@ -1,2 +1,14 @@
 <p>move-detalis works!</p>
+
+<form (ngSubmit)="onSubmit()" #testForm="ngForm">
+  <div ngModelGroup="userMainData" #userMainData="ngModelGroup">
+    <input type="text" ngModel name="username" required>
+    <input type="text" ngModel name="firstname" required>
+    <input type="text" ngModel name="lastname" required>
+  </div>
+  <button [disabled]="!testForm.valid" type="submit">Test Submit</button>
+</form>
+
+
+
 <router-outlet></router-outlet>

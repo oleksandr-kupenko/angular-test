@@ -38,6 +38,6 @@ export class FurnitureComponent implements OnInit {
   }
 
   addToRoom(furnitureItem: any) {
-    this.roomService.sendFurnitureToRoom.emit(furnitureItem);
+    this.roomService.sendFurnitureToRoom.next(furnitureItem);
   }
 }

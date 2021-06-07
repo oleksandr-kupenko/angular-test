@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MovieForRoom } from '../furniture/furniture.service';
 
 import { RoomsService, Room } from './rooms.service';
@@ -15,13 +15,29 @@ export interface RoomEdit {
   templateUrl: './rooms.component.html',
   styleUrls: ['./rooms.component.scss'],
 })
-export class RoomsComponent implements OnInit {
+export class RoomsComponent implements OnInit, OnDestroy {
   rooms: Room[] = [];
   openId: number | null = null;
   isStopedEventsBeforeSave: boolean = false;
   isEditModeNow: number | null = null;
 
   constructor(private roomsService: RoomsService) {}
+
+  ngOnInit(): void {
+    this.rooms = this.roomsService.getRooms();
+    this.roomsService.sendFurnitureToRoom.subscribe((movie: any) => {
+      // не смог типизировать...
+      if (movie) {
+        this.addFurnitureItemToRoom(movie);
+      }
+    });
+    this.roomsService.addFurnitureItemToRoom.subscribe((idxFurnitur) => this.addAmountFurnitureItem(idxFurnitur));
+    this.roomsService.subFurnitureItemToRoom.subscribe((idxFurnitur) => this.subAmountFurnitureItem(idxFurnitur));
+  }
+
+  ngOnDestroy(): void {
+    console.log('dead');
+  }
 
   checkIsDublicateEditMode(): boolean {
     const result = document.getElementById('edit-mode') ? true : false;
@@ -69,14 +85,14 @@ export class RoomsComponent implements OnInit {
   clearRoom(roomData: RoomEdit) {
     if (this.openId !== null) {
       this.rooms[this.openId].furnitureList = [];
-      this.roomsService.changeAmountFurnitureInRoom.emit(this.openId);
+      this.roomsService.changeAmountFurnitureInRoom.next(this.openId);
     }
   }
 
   addRoom(): void {
     const preAmountRooms: number = this.rooms.length;
     if (this.isEditModeNow != null) {
-      this.roomsService.trySaveEditModeRoom.emit(this.isEditModeNow);
+      this.roomsService.trySaveEditModeRoom.next(this.isEditModeNow);
     }
     if (!this.checkIsDublicateEditMode()) {
       let newRoom: Room = { roomNumber: null, roomTitle: '', isEdit: true, isOpen: false, furnitureList: [] };
@@ -103,14 +119,14 @@ export class RoomsComponent implements OnInit {
           .indexOf(movie.id);
         this.rooms[this.openId].furnitureList[currentIndex].count++;
       }
-      this.roomsService.changeAmountFurnitureInRoom.emit(this.openId);
+      this.roomsService.changeAmountFurnitureInRoom.next(this.openId);
     }
   }
 
   addAmountFurnitureItem(idxFurnitur: number): void {
     if (this.openId !== null) {
       this.rooms[this.openId].furnitureList[idxFurnitur].count++;
-      this.roomsService.changeAmountFurnitureInRoom.emit(this.openId);
+      this.roomsService.changeAmountFurnitureInRoom.next(this.openId);
     }
   }
 
@@ -119,7 +135,7 @@ export class RoomsComponent implements OnInit {
       const currentFurnitureList = this.rooms[this.openId].furnitureList;
       if (currentFurnitureList[idxFurnitur].count > 1) {
         this.rooms[this.openId].furnitureList[idxFurnitur].count--;
-        this.roomsService.changeAmountFurnitureInRoom.emit(this.openId);
+        this.roomsService.changeAmountFurnitureInRoom.next(this.openId);
       } else {
         this.rooms[this.openId].furnitureList = currentFurnitureList.filter((item, index) => index != idxFurnitur);
       }
@@ -149,14 +165,5 @@ export class RoomsComponent implements OnInit {
         this.clearRoom(roomData);
         break;
     }
-  }
-
-  ngOnInit(): void {
-    this.rooms = this.roomsService.getRooms();
-    this.roomsService.sendFurnitureToRoom.subscribe((movie) => {
-      this.addFurnitureItemToRoom(movie);
-    });
-    this.roomsService.addFurnitureItemToRoom.subscribe((idxFurnitur) => this.addAmountFurnitureItem(idxFurnitur));
-    this.roomsService.subFurnitureItemToRoom.subscribe((idxFurnitur) => this.subAmountFurnitureItem(idxFurnitur));
   }
 }

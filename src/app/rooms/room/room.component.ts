@@ -13,7 +13,7 @@ export class RoomComponent implements OnInit {
   @Input() index: number = 0;
 
   @Output() roomAction = new EventEmitter<RoomEdit>();
-  @Output() toStopEventsBeforeSave = new EventEmitter<boolean>();
+  //@Output() toStopEventsBeforeSave = new EventEmitter<boolean>();
   countFurniture: number = 0;
 
   editRoomData: { roomTitle: string; roomNumber?: number | null | undefined } = {
@@ -26,7 +26,7 @@ export class RoomComponent implements OnInit {
 
   onRoomAction(action: string) {
     this.hideRequireVarning = this.roomsService.isCanCloseEdit;
-    this.toStopEventsBeforeSave.emit(false);
+    //this.toStopEventsBeforeSave.next(false);
     this.roomAction.emit({
       idRoom: this.index,
       action: action,

@@ -6,13 +6,13 @@ import { Directive, ElementRef, HostListener, Output, EventEmitter } from '@angu
 export class ClickOtsideDeirective {
   constructor(private _elementRef: ElementRef) {}
 
-  @Output('clickOutside') clickOutside: EventEmitter<any> = new EventEmitter();
+  @Output() clickOutside: EventEmitter<void> = new EventEmitter();
 
   @HostListener('document:click', ['$event.target']) onMouseEnter(targetElement: HTMLElement) {
     const clickedInside = this._elementRef.nativeElement.contains(targetElement);
     if (!clickedInside) {
       console.log('GOOD!!!');
-      this.clickOutside.emit(null);
+      this.clickOutside.emit();
     }
   }
 }

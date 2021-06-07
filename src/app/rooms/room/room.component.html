@@ -22,12 +22,6 @@
 
 
 <ng-template #editMode>
-  <!--   <div clickOutside (clickOutside)="onRoomAction('save')" id="edit-mode" class="room_title room_title__edit">
-    <div (click)="$event.stopPropagation()" class="room_number">
-      <input [(ngModel)]="editRoomData.roomNumber" #roomNumber="ngModel" type="number" pattern="[1-9][0-9]*"
-        autocomplete="off" class="form-control" placeholder="Number">
-      <div [hidden]="roomNumber.valid" class="warn-message">Only whole numbers</div>
-    </div> -->
   <div clickOutside (clickOutside)="onRoomAction('save')" (click)="$event.stopPropagation()" id="edit-mode"
     class="room_name">
     <input [(ngModel)]="editRoomData.roomTitle" #title="ngModel" type="text" required autocomplete="off"
@@ -35,5 +29,4 @@
     <div *ngIf="(!hideRequireVarning) || (title.invalid && title.touched)" class="warn-message">Title is
       required</div>
   </div>
-  <!-- </div> -->
 </ng-template>
