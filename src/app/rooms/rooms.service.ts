@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { FurnitureService, MovieForRoom } from '../furniture/furniture.service';
 import { Subject } from 'rxjs';
 
@@ -11,11 +12,25 @@ export interface Room {
 }
 
 @Injectable()
-export class RoomsService implements OnDestroy {
+export class RoomsService {
   cuttentTitleOfEditRoom: string = '';
 
-  ngOnDestroy(): void {
-    console.log('dead rooms');
+  private rooms: Room[] = [
+    { roomNumber: 4, roomTitle: 'My Bedroom', isEdit: false, isOpen: false, furnitureList: [] },
+    { roomNumber: null, roomTitle: 'My Kitchen', isEdit: false, isOpen: false, furnitureList: [] },
+    { roomNumber: 14, roomTitle: 'My Move boxes', isEdit: false, isOpen: false, furnitureList: [] },
+  ];
+
+  private data$$ = new BehaviorSubject<Room[]>(this.rooms);
+
+  public getRooms$(): Observable<Room[]> {
+
+    // return JSON.parse(JSON.stringify(this.rooms));
+    return this.data$$.asObservable();
+  }
+
+  public setRooms(val: Room[]) {
+    this.data$$.next(val);
   }
 
   toStopEventsBeforeSave = new Subject<number | null>(); //так??
@@ -28,15 +43,7 @@ export class RoomsService implements OnDestroy {
 
   isCanCloseEdit: boolean = true;
 
-  rooms: Room[] = [
-    { roomNumber: 4, roomTitle: 'My Bedroom', isEdit: false, isOpen: false, furnitureList: [] },
-    { roomNumber: null, roomTitle: 'My Kitchen', isEdit: false, isOpen: false, furnitureList: [] },
-    { roomNumber: 14, roomTitle: 'My Move boxes', isEdit: false, isOpen: false, furnitureList: [] },
-  ];
-
   constructor(private furnitureService: FurnitureService) {}
 
-  getRooms() {
-    return JSON.parse(JSON.stringify(this.rooms));
-  }
 }
+

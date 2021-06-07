@@ -24,9 +24,12 @@
 <ng-template #editMode>
   <div clickOutside (clickOutside)="onRoomAction('save')" (click)="$event.stopPropagation()" id="edit-mode"
     class="room_name">
-    <input [(ngModel)]="editRoomData.roomTitle" #title="ngModel" type="text" required autocomplete="off"
+    <input [(ngModel)]="editRoomData.roomTitle" #title="ngModel" [type]="isPasswordOpen ? 'text' : 'password'" required autocomplete="off"
       class="form-control" placeholder="Title">
+      <icon (click)="isPasswordOpen = !isPasswordOpen">password</icon>
     <div *ngIf="(!hideRequireVarning) || (title.invalid && title.touched)" class="warn-message">Title is
       required</div>
   </div>
+
+  <!-- </div> -->
 </ng-template>
