@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MovieForRoom } from '../furniture/furniture.service';
 
 import { RoomsService, Room } from './rooms.service';
@@ -15,7 +15,7 @@ export interface RoomEdit {
   templateUrl: './rooms.component.html',
   styleUrls: ['./rooms.component.scss'],
 })
-export class RoomsComponent implements OnInit, OnDestroy {
+export class RoomsComponent implements OnInit {
   rooms: Room[] = [];
   openId: number | null = null;
   isStopedEventsBeforeSave: boolean = false;
@@ -24,19 +24,12 @@ export class RoomsComponent implements OnInit, OnDestroy {
   constructor(private roomsService: RoomsService) {}
 
   ngOnInit(): void {
-    this.rooms = this.roomsService.getRooms();
-    this.roomsService.sendFurnitureToRoom.subscribe((movie: any) => {
-      // не смог типизировать...
-      if (movie) {
-        this.addFurnitureItemToRoom(movie);
-      }
+    this.roomsService.getRooms$().subscribe((rooms) => (this.rooms = rooms));
+    this.roomsService.sendFurnitureToRoom$$.subscribe((movie) => {
+      this.addFurnitureItemToRoom$$(movie);
     });
-    this.roomsService.addFurnitureItemToRoom.subscribe((idxFurnitur) => this.addAmountFurnitureItem(idxFurnitur));
-    this.roomsService.subFurnitureItemToRoom.subscribe((idxFurnitur) => this.subAmountFurnitureItem(idxFurnitur));
-  }
-
-  ngOnDestroy(): void {
-    console.log('dead');
+    this.roomsService.addFurnitureItemToRoom$$.subscribe((idxFurnitur) => this.addAmountFurnitureItem(idxFurnitur));
+    this.roomsService.subFurnitureItemToRoom$$.subscribe((idxFurnitur) => this.subAmountFurnitureItem(idxFurnitur));
   }
 
   checkIsDublicateEditMode(): boolean {
@@ -85,7 +78,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
   clearRoom(roomData: RoomEdit) {
     if (this.openId !== null) {
       this.rooms[this.openId].furnitureList = [];
-      this.roomsService.changeAmountFurnitureInRoom.next(this.openId);
+      this.roomsService.changeAmountFurnitureInRoom$$.next(this.openId);
     }
   }
 
@@ -103,7 +96,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
     console.log(this.roomsService.isCanCloseEdit);
   }
 
-  addFurnitureItemToRoom(movie: MovieForRoom): void {
+  addFurnitureItemToRoom$$(movie: MovieForRoom): void {
     if (this.openId !== null) {
       const checkExist = this.rooms[this.openId].furnitureList.some((movieItem) => {
         return movieItem.id === movie.id;
@@ -119,14 +112,14 @@ export class RoomsComponent implements OnInit, OnDestroy {
           .indexOf(movie.id);
         this.rooms[this.openId].furnitureList[currentIndex].count++;
       }
-      this.roomsService.changeAmountFurnitureInRoom.next(this.openId);
+      this.roomsService.changeAmountFurnitureInRoom$$.next(this.openId);
     }
   }
 
   addAmountFurnitureItem(idxFurnitur: number): void {
     if (this.openId !== null) {
       this.rooms[this.openId].furnitureList[idxFurnitur].count++;
-      this.roomsService.changeAmountFurnitureInRoom.next(this.openId);
+      this.roomsService.changeAmountFurnitureInRoom$$.next(this.openId);
     }
   }
 
@@ -135,7 +128,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
       const currentFurnitureList = this.rooms[this.openId].furnitureList;
       if (currentFurnitureList[idxFurnitur].count > 1) {
         this.rooms[this.openId].furnitureList[idxFurnitur].count--;
-        this.roomsService.changeAmountFurnitureInRoom.next(this.openId);
+        this.roomsService.changeAmountFurnitureInRoom$$.next(this.openId);
       } else {
         this.rooms[this.openId].furnitureList = currentFurnitureList.filter((item, index) => index != idxFurnitur);
       }

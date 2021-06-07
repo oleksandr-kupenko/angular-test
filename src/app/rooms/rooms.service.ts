@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable, OnDestroy } from '@angular/core';
 import { FurnitureService, MovieForRoom } from '../furniture/furniture.service';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 
 export interface Room {
   roomNumber?: number | null | undefined;
@@ -18,13 +18,13 @@ export class RoomsService implements OnDestroy {
     console.log('dead rooms');
   }
 
-  toStopEventsBeforeSave = new Subject<number | null>(); //так??
-  sendFurnitureToRoom: Subject<MovieForRoom> = new Subject(); // так ???
-  addFurnitureItemToRoom: Subject<number> = new Subject<number>(); // или  так???
-  subFurnitureItemToRoom = new EventEmitter<number>();
-  trySaveEditModeRoom = new EventEmitter<number>();
-  addedNewFurnitureItem = new EventEmitter<number>();
-  changeAmountFurnitureInRoom = new EventEmitter<number>();
+  //toStopEventsBeforeSave = new Subject<number | null>(); //так??
+  sendFurnitureToRoom$$: Subject<MovieForRoom> = new Subject(); // так ???
+  addFurnitureItemToRoom$$: Subject<number> = new Subject<number>(); // или  так???
+  subFurnitureItemToRoom$$ = new Subject<number>();
+  trySaveEditModeRoom = new Subject<number>();
+  //addedNewFurnitureItem = new Subject<number>();
+  changeAmountFurnitureInRoom$$ = new Subject<number>();
 
   isCanCloseEdit: boolean = true;
 
@@ -36,7 +36,10 @@ export class RoomsService implements OnDestroy {
 
   constructor(private furnitureService: FurnitureService) {}
 
-  getRooms() {
-    return JSON.parse(JSON.stringify(this.rooms));
+  private data$$ = new BehaviorSubject<Room[]>(this.rooms);
+
+  public getRooms$(): Observable<Room[]> {
+    // return JSON.parse(JSON.stringify(this.rooms));
+    return this.data$$.asObservable();
   }
 }

@@ -48,7 +48,7 @@ export class RoomComponent implements OnInit {
         this.onRoomAction('save');
       }
     });
-    this.roomsService.changeAmountFurnitureInRoom.subscribe((id: number) => {
+    this.roomsService.changeAmountFurnitureInRoom$$.subscribe((id: number) => {
       if (id === this.index) {
         let amountFurniture: number = 0;
         this.room.furnitureList.forEach((furniture) => {
