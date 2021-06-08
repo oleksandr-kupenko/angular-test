@@ -1,11 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LocationService } from './location.service';
-
-interface RatingData {
-  title: string;
-  currentRating: number;
-  newRating: number;
-}
+import { LocationService, ObjRequest, RatingData } from './location.service';
 
 @Component({
   selector: 'app-location',
@@ -14,46 +8,34 @@ interface RatingData {
   providers: [LocationService],
 })
 export class LocationComponent implements OnInit {
-  stars: number[] = [1, 2, 3, 4, 5];
+  stars: number[] = [5, 4, 3, 2, 1];
 
-  showNewRating: boolean = false;
-
-  ratingData: RatingData[] = [
-    { title: '', currentRating: 0, newRating: 0 },
-    { title: '', currentRating: 0, newRating: 0 },
-    { title: '', currentRating: 0, newRating: 0 },
-    { title: '', currentRating: 0, newRating: 0 },
-    { title: '', currentRating: 0, newRating: 0 },
-    { title: '', currentRating: 0, newRating: 0 },
-  ];
+  ratingData: RatingData[] = [{ title: '', rating: 0 }];
+  isLoading = false;
 
   constructor(private localService: LocationService) {}
   ngOnInit() {
     this.localService.getRatingData$().subscribe((data) => {
       for (let i = 0; i < data.length; i++) {
-        this.ratingData[i].title = data[i].title;
-        this.ratingData[i].currentRating = data[i].rating;
-        this.ratingData[i].newRating = data[i].rating;
+        this.ratingData = data;
       }
     });
-    console.log(this.ratingData);
   }
 
   onChangeRating(blockIndex: number, newRating: number) {
-    this.ratingData[blockIndex].currentRating = newRating;
+    this.ratingData[blockIndex].rating = newRating;
   }
 
-  onShowNewRating(blockIndex: number, newRating: number) {
-    this.showNewRating = true;
-    console.log(this.showNewRating);
-    this.ratingData[blockIndex].newRating = newRating;
-  }
-
-  onShowCurrentRating() {
-    this.showNewRating = false;
-    this.ratingData.map((block) => {
-      block.newRating = block.currentRating;
+  onSaveNewRating() {
+    if (!this.ratingData) {
+      return;
+    }
+    this.isLoading = true;
+    this.localService.saveRatingData$(this.ratingData).subscribe((newRatingData) => {
+      //console.log(Object.entries(newRatingData)); //  Try changing the `lib` compiler option to 'es2017' or later.
+      this.ratingData = this.objectResponseToArray(newRatingData);
     });
+    this.isLoading = false;
   }
 
   ratingDesc(ratingLevel: number) {
@@ -76,5 +58,15 @@ export class LocationComponent implements OnInit {
       default:
         return '';
     }
+  }
+
+  private objectResponseToArray(obj: ObjRequest) {
+    let arr = [];
+    for (let key in obj) {
+      if (!isNaN(+key)) {
+        arr.push(obj[key]);
+      }
+    }
+    return arr;
   }
 }

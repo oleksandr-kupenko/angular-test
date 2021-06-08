@@ -1,31 +1,32 @@
 <div class="rating-container">
-  <ng-container *ngFor="let rating of ratingData; let ridx = index">
-    <div class=" rating-block">
-      <div class="rating-block_title">{{rating.title}}</div>
-      <div class="rating-block_body">
-        <div class="rating-block_stars">
-          <div *ngFor="let star of stars; let sidx = index" (click)="onChangeRating(ridx, sidx + 1)"
-            class="rating-block_star" (pointerenter)="onShowNewRating(ridx, sidx + 1)"
-            (pointerout)=onShowCurrentRating()>
-            <ng-container *ngIf="!showNewRating; else editStarsBlock">
-              <mat-icon aria-hidden="false" aria-label="star_outline">{{rating.currentRating < sidx + 1 ? "star_outline"
-                  : "star" }}</mat-icon>
-            </ng-container>
-            <ng-template #editStarsBlock>
-              <mat-icon aria-hidden="false" aria-label="star_outline">{{rating.newRating < sidx + 1 ? "star_outline"
-                  : "star" }}</mat-icon>
-            </ng-template>
+  <ng-container *ngIf="!isLoading; else loading">
+    <ng-container *ngFor="let ratingItem of ratingData; let ridx = index">
+      <div class=" rating-block">
+        <div class="rating-block_title">{{ratingItem.title}}</div>
+        <div class="rating-block_body">
+          <div class="rating-block_stars">
+            <span *ngFor="let star of stars; let sidx = index" (click)="onChangeRating(ridx, stars[sidx])" class="star"
+              [ngClass]="[ratingItem.rating < sidx + 1 ? 'empty-star'
+                : 'full-star']"></span>
+
           </div>
-        </div>
-        <div class="rating-block_count">
-          <div class="rating-block_count-amount">
-            {{rating.currentRating}}
-          </div>
-          <div class="rating-block_count-desc">
-            {{ratingDesc(rating.currentRating)}}
+          <div class="rating-block_count">
+            <div class="rating-block_count-amount">
+              {{ratingItem.rating}}
+            </div>
+            <div class="rating-block_count-desc">
+              {{ratingDesc(ratingItem.rating)}}
+            </div>
           </div>
         </div>
       </div>
+    </ng-container>
+
+    <div class="rating-buttons">
+      <button class="cancel-bt">CANCEL</button>
+      <button (click)="onSaveNewRating()" class="submit-bt">SUBMIT REVIEW</button>
     </div>
   </ng-container>
+
+  <ng-template #loading>loading...</ng-template>
 </div>
