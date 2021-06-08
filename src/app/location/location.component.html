@@ -1,3 +1,31 @@
-<p>location works!</p>
-<button (click)="activateObservable()">Activate observable</button>
-<button (click)="saveRooms()">Save rooms to server (imitation)</button>
+<div class="rating-container">
+  <ng-container *ngFor="let rating of ratingData; let ridx = index">
+    <div class=" rating-block">
+      <div class="rating-block_title">{{rating.title}}</div>
+      <div class="rating-block_body">
+        <div class="rating-block_stars">
+          <div *ngFor="let star of stars; let sidx = index" (click)="onChangeRating(ridx, sidx + 1)"
+            class="rating-block_star" (pointerenter)="onShowNewRating(ridx, sidx + 1)"
+            (pointerout)=onShowCurrentRating()>
+            <ng-container *ngIf="!showNewRating; else editStarsBlock">
+              <mat-icon aria-hidden="false" aria-label="star_outline">{{rating.currentRating < sidx + 1 ? "star_outline"
+                  : "star" }}</mat-icon>
+            </ng-container>
+            <ng-template #editStarsBlock>
+              <mat-icon aria-hidden="false" aria-label="star_outline">{{rating.newRating < sidx + 1 ? "star_outline"
+                  : "star" }}</mat-icon>
+            </ng-template>
+          </div>
+        </div>
+        <div class="rating-block_count">
+          <div class="rating-block_count-amount">
+            {{rating.currentRating}}
+          </div>
+          <div class="rating-block_count-desc">
+            {{ratingDesc(rating.currentRating)}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

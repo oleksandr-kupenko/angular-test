@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, OnDestroy } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { FurnitureService, MovieForRoom } from '../furniture/furniture.service';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 
@@ -11,12 +11,8 @@ export interface Room {
 }
 
 @Injectable()
-export class RoomsService implements OnDestroy {
+export class RoomsService {
   cuttentTitleOfEditRoom: string = '';
-
-  ngOnDestroy(): void {
-    console.log('dead rooms');
-  }
 
   //toStopEventsBeforeSave = new Subject<number | null>(); //так??
   sendFurnitureToRoom$$: Subject<MovieForRoom> = new Subject(); // так ???
@@ -34,9 +30,9 @@ export class RoomsService implements OnDestroy {
     { roomNumber: 14, roomTitle: 'My Move boxes', isEdit: false, isOpen: false, furnitureList: [] },
   ];
 
-  constructor(private furnitureService: FurnitureService) {}
-
   private data$$ = new BehaviorSubject<Room[]>(this.rooms);
+
+  constructor(private furnitureService: FurnitureService) {}
 
   public getRooms$(): Observable<Room[]> {
     // return JSON.parse(JSON.stringify(this.rooms));
