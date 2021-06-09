@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LocationService, ObjRequest, RatingData } from './location.service';
+import { LocationService, RatingDataTable } from './location.service';
 
 @Component({
   selector: 'app-location',
@@ -10,30 +10,35 @@ import { LocationService, ObjRequest, RatingData } from './location.service';
 export class LocationComponent implements OnInit {
   stars: number[] = [5, 4, 3, 2, 1];
 
-  ratingData: RatingData[] = [{ title: '', rating: 0 }];
+  ratingData: RatingDataTable = { ratings: [{ title: '', rating: 0 }], rewiew: '' };
+  rewiew?: string = '';
   isLoading = false;
 
   constructor(private localService: LocationService) {}
   ngOnInit() {
     this.localService.getRatingData$().subscribe((data) => {
-      for (let i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.ratings.length; i++) {
         this.ratingData = data;
       }
     });
   }
 
   onChangeRating(blockIndex: number, newRating: number) {
-    this.ratingData[blockIndex].rating = newRating;
-  }
-
-  onSaveNewRating() {
-    if (!this.ratingData) {
+    if (this.ratingData.ratings[blockIndex].rating === newRating) {
+      this.ratingData.ratings[blockIndex].rating = 0;
       return;
     }
+    this.ratingData.ratings[blockIndex].rating = newRating;
+  }
+
+  onSaveNewRating(rewiewText: HTMLTextAreaElement) {
     this.isLoading = true;
+    if (rewiewText.value && rewiewText.value !== this.ratingData.rewiew) {
+      this.ratingData.rewiew = rewiewText.value;
+    }
     this.localService.saveRatingData$(this.ratingData).subscribe((newRatingData) => {
-      //console.log(Object.entries(newRatingData)); //  Try changing the `lib` compiler option to 'es2017' or later.
-      this.ratingData = this.objectResponseToArray(newRatingData);
+      console.log(newRatingData);
+      this.ratingData = newRatingData;
     });
     this.isLoading = false;
   }
@@ -58,15 +63,5 @@ export class LocationComponent implements OnInit {
       default:
         return '';
     }
-  }
-
-  private objectResponseToArray(obj: ObjRequest) {
-    let arr = [];
-    for (let key in obj) {
-      if (!isNaN(+key)) {
-        arr.push(obj[key]);
-      }
-    }
-    return arr;
   }
 }

@@ -1,6 +1,6 @@
 <div class="rating-container">
   <ng-container *ngIf="!isLoading; else loading">
-    <ng-container *ngFor="let ratingItem of ratingData; let ridx = index">
+    <ng-container *ngFor="let ratingItem of ratingData.ratings; let ridx = index">
       <div class=" rating-block">
         <div class="rating-block_title">{{ratingItem.title}}</div>
         <div class="rating-block_body">
@@ -21,10 +21,18 @@
         </div>
       </div>
     </ng-container>
+    <div class="comment-block">
 
+      <mat-form-field appearance="fill" floatLabel="always">
+        <div class="label">Your rewiew</div>
+        <textarea rows="10" cols="30" placeholder="Type your review here" matInput #rewiewText
+          [value]="ratingData.rewiew"></textarea>
+      </mat-form-field>
+    </div>
     <div class="rating-buttons">
       <button class="cancel-bt">CANCEL</button>
-      <button (click)="onSaveNewRating()" class="submit-bt">SUBMIT REVIEW</button>
+      <button (click)="onSaveNewRating(rewiewText)" class="submit-bt">SUBMIT
+        REVIEW</button>
     </div>
   </ng-container>
 
