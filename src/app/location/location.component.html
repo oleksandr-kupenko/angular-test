@@ -1,18 +1,21 @@
-<div class="rating-container">
-  <ng-container *ngIf="!isLoading; else loading">
+<div class="rating-wrapper">
+  <div class="rating-header">
+    <div (click)="onClose()" class="rating-header__close">CLOSE</div>
+  </div>
+  <div class="rating-content">
+    <div class="rating-title">Review GreatMovers NYC</div>
     <ng-container *ngFor="let ratingItem of ratingData.ratings; let ridx = index">
       <div class=" rating-block">
         <div class="rating-block_title">{{ratingItem.title}}</div>
         <div class="rating-block_body">
           <div class="rating-block_stars">
-            <span *ngFor="let star of stars; let sidx = index" (click)="onChangeRating(ridx, stars[sidx])" class="star"
-              [ngClass]="[ratingItem.rating < sidx + 1 ? 'empty-star'
-                : 'full-star']"></span>
+            <span *ngFor="let star of stars; let sidx = index" (click)="onChangeRating(ridx, stars[sidx])"
+              class="star {{showStar(ratingItem.rating, sidx)}}"></span>
 
           </div>
           <div class="rating-block_count">
             <div class="rating-block_count-amount">
-              {{ratingItem.rating}}
+              {{ratingItem.rating > 0 ? ratingItem.rating : ''}}
             </div>
             <div class="rating-block_count-desc">
               {{ratingDesc(ratingItem.rating)}}
@@ -29,12 +32,38 @@
           [value]="ratingData.rewiew"></textarea>
       </mat-form-field>
     </div>
-    <div class="rating-buttons">
-      <button class="cancel-bt">CANCEL</button>
-      <button (click)="onSaveNewRating(rewiewText)" class="submit-bt">SUBMIT
-        REVIEW</button>
+    <div class="add-photo-block">
+      <div class="add-photo-block_done">
+        <ng-container *ngFor="let img of uploadImages; let idx = index">
+          <div *ngIf="uploadImages[idx]" class="upload-thumbinal">
+            <img src='{{uploadImages[idx]}}' alt="" [ngStyle]="{
+              opacity: removeThumbinalMode ? '0.6' : '1'}">
+            <div (click)="onRemoveImg(idx)" (pointerenter)="removeThumbinalMode = true"
+              (pointerout)="removeThumbinalMode = false" class="remove-thumbinal-btn">REMOVE</div>
+          </div>
+        </ng-container>
+      </div>
+      <input class="hide" type="file" accept="image/*" #file (change)="onAddFile($event)">
+      <div (click)="file.click()" class="add-photo-block_btn">
+        <div class="camera-img">
+          <mat-icon aria-hidden="false" aria-label="photo_camera">photo_camera</mat-icon>
+        </div>
+        <div class="add-photo-desc">
+          Add photos
+        </div>
+      </div>
     </div>
-  </ng-container>
 
-  <ng-template #loading>loading...</ng-template>
+
+    <ng-template #loading>
+      <div style="
+    text-align: center;  width: 179px;
+">loading...</div>
+    </ng-template>
+  </div>
+  <div class="rating-buttons">
+    <button class="cancel-bt">CANCEL</button>
+    <button *ngIf="!isLoading; else loading" (click)="onSaveNewRating(rewiewText)" class="submit-bt">SUBMIT
+      REVIEW</button>
+  </div>
 </div>
