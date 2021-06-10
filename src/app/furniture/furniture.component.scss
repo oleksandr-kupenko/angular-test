@@ -3,7 +3,7 @@ $mgrey: #d3d3d3;
 $dgrey: #57565c;
 
 .furniture-container {
-  max-width: 460px;
+  width: 460px;
   display: grid;
   grid-template:
     'nav search search'

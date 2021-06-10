@@ -6,8 +6,8 @@ import { LocationComponent } from './location/location.component';
 import { MoveDetalisComponent } from './move-detalis/move-detalis.component';
 
 const routes: Routes = [
-  { path: '', component: InventoryComponent },
-  { path: 'location', component: LocationComponent },
+  { path: '', component: LocationComponent },
+  { path: 'location', component: InventoryComponent },
   { path: 'move-detalis', component: MoveDetalisComponent, children: [{ path: ':id', component: LocationComponent }] },
 ];
 

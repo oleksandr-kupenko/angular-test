@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="furniture-search"></div>
-  <div *ngIf="moviesList" class="furniture-content">
+  <div *ngIf="!isLoading; else loading" class="furniture-content">
     <div *ngFor="let movie of moviesList.results.slice(0, 12); let idx = index" class="furniture-item">
       <div class="title-item_img">
         <img src="https://image.tmdb.org/t/p/original/{{ movie.poster_path }}"
@@ -25,3 +25,8 @@
     </div>
   </div>
 </div>
+
+<ng-template #loading>
+  <div style="display: flex; justify-content: center; padding: 50%;">Loading...
+  </div>
+</ng-template>

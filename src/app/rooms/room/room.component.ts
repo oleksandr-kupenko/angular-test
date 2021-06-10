@@ -1,7 +1,8 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, HostListener } from '@angular/core';
 
-import { RoomsService, Room } from '../rooms.service';
+import { RoomsService, RoomTable, RoomStateTable } from '../rooms.service';
 import { RoomEdit } from '../rooms.component';
+import { Movie, MovieForRoom } from 'src/app/furniture/furniture.service';
 
 @Component({
   selector: 'app-room',
@@ -9,7 +10,7 @@ import { RoomEdit } from '../rooms.component';
   styleUrls: ['./room.component.scss'],
 })
 export class RoomComponent implements OnInit {
-  @Input() room: Room = { roomNumber: null, roomTitle: '', isEdit: false, isOpen: false, furnitureList: [] };
+  @Input() room: RoomStateTable = { roomNumber: null, roomTitle: '', isEdit: false, isOpen: false, furnitureList: [] };
   @Input() index: number = 0;
 
   @Output() roomAction = new EventEmitter<RoomEdit>();
@@ -51,7 +52,7 @@ export class RoomComponent implements OnInit {
     this.roomsService.changeAmountFurnitureInRoom$$.subscribe((id: number) => {
       if (id === this.index) {
         let amountFurniture: number = 0;
-        this.room.furnitureList.forEach((furniture) => {
+        this.room.furnitureList.forEach((furniture: MovieForRoom) => {
           amountFurniture = amountFurniture + furniture.count;
         });
         this.countFurniture = amountFurniture;

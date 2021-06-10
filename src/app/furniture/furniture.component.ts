@@ -18,18 +18,23 @@ export class FurnitureComponent implements OnInit {
     total_pages: 0,
   };
   navItems = this.furnitureService.navItems;
+  isLoading: boolean = false;
 
   constructor(private furnitureService: FurnitureService, private roomService: RoomsService) {}
 
   getFurnitureList(genreId: number = this.genreId): void {
-    this.furnitureService.getMoviesList(genreId).subscribe((movies: MoviesTable) => (this.moviesList = movies));
+    this.isLoading = true;
+    this.furnitureService.getMoviesList(genreId).subscribe((movies: MoviesTable): void => {
+      this.moviesList = movies;
+      this.isLoading = false;
+    });
   }
 
   ngOnInit(): void {
     this.getFurnitureList();
   }
 
-  changeNavItem(idx: number) {
+  changeNavItem(idx: number): void {
     this.navItems[this.activeNavItemIndex].isActive = false;
     this.activeNavItemIndex = idx;
     this.navItems[idx].isActive = true;
@@ -37,7 +42,7 @@ export class FurnitureComponent implements OnInit {
     this.getFurnitureList();
   }
 
-  addToRoom(furnitureItem: any) {
+  addToRoom(furnitureItem: any): void {
     this.roomService.sendFurnitureToRoom$$.next(furnitureItem);
   }
 }

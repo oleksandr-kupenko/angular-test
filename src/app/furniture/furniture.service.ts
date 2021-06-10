@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 export interface Movie {
   poster_path: string | null;
@@ -56,9 +57,11 @@ export class FurnitureService {
   constructor(private http: HttpClient) {}
 
   getMoviesList(genreId: number): Observable<MoviesTable> {
-    return this.http.get<MoviesTable>(
-      `https://api.themoviedb.org/3/discover/movie?api_key=2457bcf1079900ec3973765a5a018402&with_genres=${genreId}&page=1`
-    );
+    return this.http
+      .get<MoviesTable>(
+        `https://api.themoviedb.org/3/discover/movie?api_key=2457bcf1079900ec3973765a5a018402&with_genres=${genreId}&page=1`
+      )
+      .pipe(delay(300));
   }
 
   testGetIdFromComponent(id: number) {
