@@ -68,7 +68,7 @@
 .rating-block_stars {
   display: flex;
   justify-content: center;
-  width: 370px;
+  max-width: 370px;
   align-items: center;
 
   &:hover {
@@ -153,7 +153,8 @@
 
 .star {
   display: block;
-  width: 72px;
+  padding-right: 22px;
+  width: 49px;
   height: 47px;
   cursor: pointer;
 }

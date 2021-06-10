@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LocationService, RatingDataTable } from './location.service';
 
 import { convertToBase64, convertToImage } from '../../utils/utils';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-location',
@@ -9,7 +10,7 @@ import { convertToBase64, convertToImage } from '../../utils/utils';
   styleUrls: ['./location.component.scss'],
   providers: [LocationService],
 })
-export class LocationComponent implements OnInit {
+export class LocationComponent implements OnInit, OnDestroy {
   stars: number[] = [5, 4, 3, 2, 1];
 
   ratingData: RatingDataTable = { ratings: [{ title: '', rating: 0 }], rewiew: '', images: [] };
@@ -18,19 +19,33 @@ export class LocationComponent implements OnInit {
   isLoading = false;
   message: string = '';
 
+  getRetingDataSubscribe?: Subscription;
+
   constructor(private localService: LocationService) {}
-  ngOnInit() {
-    this.localService.getRatingData$().subscribe((data) => {
+
+  getRatingData() {
+    this.getRetingDataSubscribe = this.localService.getRatingData$().subscribe((data) => {
       for (let i = 0; i < data.ratings.length; i++) {
         this.ratingData = data;
-        if (this.ratingData.images) {
-          this.ratingData.images.map((imageBase64) => {
-            this.uploadImages.push(imageBase64);
-            console.log('arr', this.uploadImages);
-          });
-        }
+        this.createArrImgForThumbinals(data);
       }
     });
+  }
+
+  private createArrImgForThumbinals(ratingDataFromServer: RatingDataTable) {
+    if (ratingDataFromServer.images) {
+      ratingDataFromServer.images.map((imageBase64) => {
+        this.uploadImages.push(imageBase64);
+      });
+    }
+  }
+
+  ngOnInit() {
+    this.getRatingData();
+  }
+
+  ngOnDestroy() {
+    this.getRetingDataSubscribe?.unsubscribe;
   }
 
   onChangeRating(blockIndex: number, newRating: number) {
@@ -53,7 +68,7 @@ export class LocationComponent implements OnInit {
     });
   }
 
-  roundingRating(rating: number) {
+  private roundingRating(rating: number) {
     return Math.round(rating * 2) / 2;
   }
 
@@ -79,35 +94,42 @@ export class LocationComponent implements OnInit {
     });
   }
 
-  checkIsImg(file: any): boolean {
-    if (file.match(/image\/*/) == null) {
+  private checkIsImg(file: File): boolean {
+    if (file.type.match(/image\/*/) == null) {
       this.message = 'Only images are supported.';
+      console.log(this.message);
+      return false;
+    }
+    if (file.size > 5000000) {
+      this.message = 'Max size is 5 Mb.';
+      console.log(this.message);
       return false;
     }
     return true;
   }
 
-  async addImgToRatingData(img: File) {
+  private async addImgBase64ToRatingData(img: File) {
     const imgBase64: string = await convertToBase64(img);
     this.ratingData.images?.push(imgBase64);
   }
 
   async onAddFile(event: Event) {
+    this.message = '';
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) {
       return;
     }
     const file: File = input.files[0];
-    /*    if (!this.checkIsImg(file)) {
+    console.log(file);
+    if (!this.checkIsImg(file)) {
       return;
-    } */
-    this.addImgToRatingData(file);
+    }
+    this.addImgBase64ToRatingData(file);
 
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
       this.uploadImages = [...this.uploadImages, reader.result];
-      console.log(this.uploadImages);
     };
   }
 

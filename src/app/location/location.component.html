@@ -34,6 +34,7 @@
     </div>
     <div class="add-photo-block">
       <div class="add-photo-block_done">
+
         <ng-container *ngFor="let img of uploadImages; let idx = index">
           <div *ngIf="uploadImages[idx]" class="upload-thumbinal">
             <img src='{{uploadImages[idx]}}' alt="" [ngStyle]="{
@@ -42,8 +43,10 @@
               (pointerout)="removeThumbinalMode = false" class="remove-thumbinal-btn">REMOVE</div>
           </div>
         </ng-container>
+
       </div>
       <input class="hide" type="file" accept="image/*" #file (change)="onAddFile($event)">
+      <div *ngIf="message" class="warn-message">{{message}}</div>
       <div (click)="file.click()" class="add-photo-block_btn">
         <div class="camera-img">
           <mat-icon aria-hidden="false" aria-label="photo_camera">photo_camera</mat-icon>
